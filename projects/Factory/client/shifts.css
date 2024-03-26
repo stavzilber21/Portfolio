@@ -1,0 +1,95 @@
+/* Hide close button and table titles initially */
+#popup button {
+    display: none;
+}
+#table_shifts th {
+    display: none;
+    cursor: pointer;
+}
+#table_employees th {
+    display: none;
+    cursor: pointer;
+}
+/* CSS styles for the links */
+#links {
+    padding: 10px;
+    background-color: #f0f0f0;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#links a {
+    color: #333;
+    text-decoration: none;
+    padding: 5px 10px;
+    margin: 0 5px;
+    border-radius: 5px;
+    background-color: #ddd;
+    transition: background-color 0.3s ease;
+}
+
+#links a:hover {
+    background-color: #bbb;
+}
+
+ /* Container styling */
+ .form-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin-bottom: 20px;
+}
+.container {
+    display: flex;
+}
+
+.form-column {
+    flex: 1;
+    margin-right: 10px; /* Adjust margin between columns */
+}
+
+
+.form-container form {
+    margin-top: 10px;
+}
+
+/* Form element styling */
+label {
+    font-weight: bold;
+}
+
+input[type="text"], select {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+}
+
+#filter{
+    width: 10%;
+}
+
+input[type="submit"], button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+input[type="submit"]:hover, button:hover {
+    background-color: #45a049;
+}

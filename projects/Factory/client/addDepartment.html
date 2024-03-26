@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Add Department page</title>
+        <link rel="stylesheet" href="shifts.css">
+    </head>
+    <body onload="getData()">
+        <div class="form-container">
+            <h1>Add Department Page</h1>
+            <h2 id="name"></h2>
+        
+            <form id="addForm">
+                <label for="depName">Department Name:</label><br>
+                <input type="text" id="depName" name="depName"><br><br>
+        
+                <input type="submit" value="Save">
+                
+            </form>
+            <br>
+            <button onclick="cancel()">Cancel</button>
+        </div>
+        <script>
+            async function cancel(){
+                    location.href = "./departments.html"; 
+                }
+
+             async function getData() {
+                //get the name of user
+                const username = sessionStorage.getItem("name");
+                document.getElementById("name").innerText = username;
+
+                  // Add event listener for form submission
+                const form = document.getElementById("addForm");
+                form.addEventListener("submit", function(event) {
+                    event.preventDefault(); // Prevent default form submission
+                    addDepartment(); // Call addDepartment function
+                });
+            }
+
+            async function addDepartment(){
+                //the data of the new Department
+                const name = document.getElementById('depName').value;
+                const token = sessionStorage.getItem("token");
+                    if (!token) {
+                        window.location.href = "./login.html";
+                    }
+                    const resp = await fetch("http://localhost:8000/departments" ,{
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-access-token": token
+                        },
+                        body: JSON.stringify({
+                            name: name,
+                            manager: null // Set manager to null
+                        })
+                    });
+                    const response = await resp.json();
+                    if(response==false){
+                        alert("Action not allowed - come back tomorrow");
+                        sessionStorage.clear();
+                        window.location.href = "./login.html"
+                    }
+                    else{
+                        location.href = "./departments.html"; 
+                    }
+                    
+            }
+        </script>
+    </body>
+</html>

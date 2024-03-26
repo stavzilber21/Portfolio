@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Users page</title>
+    <link rel="stylesheet" href="shifts.css">
+</head>
+
+<body onload="getUsers()">
+    <div id="links">
+        <a href="#" onclick="logOut()">Disconnect</a> |
+        <a href="home.html">Home</a>
+    </div>
+    <h1>Users Page</h1>
+    <h2 id="name"></h2>
+    <br>
+    <h3>Users: </h3>
+    <table id="table" border="1">
+        <tr>
+            <th>Full Name</th>
+            <th>Max Actions</th>
+            <th>Number of Actions</th>
+        </tr>
+    </table>
+    <Br>
+    <script>
+        async function logOut() {
+                sessionStorage.clear();
+                window.location.href = "./login.html"
+        }
+        
+        async function addUsersToTable(users, numAction,name){
+            const table = document.getElementById("table");
+            for(const user of users){
+                const userTr = document.createElement("tr");
+                const userTdFullName = document.createElement("td");
+                const usertdMaxAction = document.createElement("td");
+                const usertdnumAction = document.createElement("td");
+                userTdFullName.innerText= user.fullname;
+                usertdMaxAction.innerText = user.numOfAction;
+                if(numAction!==undefined && name === user.fullname){
+                    usertdnumAction.innerText= numAction;
+                }
+                else{ 
+                    usertdnumAction.innerText = user.numOfAction;
+                }
+                userTr.appendChild(userTdFullName);
+                userTr.appendChild(usertdMaxAction);
+                userTr.appendChild(usertdnumAction);
+                table.appendChild(userTr);
+            }
+        }
+        async function getUsers() {
+            const username = sessionStorage.getItem("name")
+            const userId = sessionStorage.getItem("id");
+            document.getElementById("name").innerText = username;
+            const token = sessionStorage['token'];
+
+            const resp = await fetch('http://localhost:8000/users', {
+                method: 'GET',
+                headers: { 'x-access-token': token, 'id': userId},
+            });
+            
+            const result = await resp.json();
+            const {users}= result;
+            const {numAction} = result;
+            const {name} = result;
+            if(result==false){
+                alert("Action not allowed - come back tomorrow")
+                    sessionStorage.clear();
+                    window.location.href = "./login.html"
+            }
+            addUsersToTable(users, numAction,name);
+        }
+    </script>
+</body>
+</html>

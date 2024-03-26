@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Departments page</title>
+    <link rel="stylesheet" href="shifts.css">
+</head>
+<body onload="getDepartments()">
+    <div id="links">
+        <a href="#" onclick="logOut()">Disconnect</a> |
+        <a href="home.html">Home</a>
+    </div>
+    <h1>Departments Page</h1>
+    <h2 id="name"></h2>
+    <br>
+    <button onclick="addNewDepartment()">Add Department</button>
+    <br>
+    <h3>Departments: </h3>
+    <table id="table" border="1">
+        <tr>
+            <th>Name</th>
+            <th>Manager</th>
+            <th>Employees</th>
+        </tr>
+    </table>
+    <Br>
+    <div class="popup" id="popup">
+    
+        <table id="table_employees" border="1">
+            <tr>
+                <th>Name</th>
+            </tr>
+        </table>
+        <button onclick="closePopup()">Close</button>
+    </div>
+    <script>
+        async function logOut() {
+                sessionStorage.clear();
+                window.location.href = "./login.html"
+        }
+
+        function addNewDepartment(){
+            window.location.href = "./addDepartment.html"
+        }
+        async function addDepartmentsToTable(departments){
+            const table = document.getElementById("table");
+            for (const dep of departments) {
+                const depTr = document.createElement("tr");
+                const depTdName = document.createElement("td");
+                const deptdManager = document.createElement("td");
+                const buttonTd = document.createElement("td");
+                const button = document.createElement("button");
+                button.textContent = "Show Employees";
+
+                button.addEventListener("click", function() {
+                    const names = departments.map(dep => dep.name);
+                    openPopup();
+                    showEmployees(dep._id,dep.name,names);
+                });
+
+                depTdName.innerText = dep.name;
+                if(dep.manager===null){
+                    deptdManager.innerText = "There is no manager";
+                }
+                else{
+                    const managerName = await getNameManager(dep.manager);
+                    deptdManager.innerText = managerName;
+                }
+             
+
+                depTdName.addEventListener("click", function() {
+                    sessionStorage.setItem("sourcePage", "departments");
+                    window.location.href = "./editDepartment.html?&department=" + dep.name;
+                });
+
+                buttonTd.appendChild(button);
+                depTr.appendChild(depTdName);
+                depTr.appendChild(deptdManager);
+                depTr.appendChild(buttonTd);
+                table.appendChild(depTr);
+            }
+        }
+        async function getNameManager(id){
+            const token = sessionStorage['token'];
+            const resp = await fetch("http://localhost:8000/employees/employee/" + id, {
+                method: 'GET',
+                headers: { 'x-access-token': token },
+            });
+            const employee = await resp.json();
+            if(employee.value==="null" || !employee){
+                return "There is no manager";
+            }
+            return employee.firstName + ' ' + employee.lastName;
+        }
+
+
+        async function showEmployees(departmentID,nameDepartment,names){
+            const token = sessionStorage['token'];
+            const resp = await fetch("http://localhost:8000/employees/filterDep/" + departmentID, {
+                method: 'GET',
+                headers: { 'x-access-token': token },
+            });
+            const employees = await resp.json();
+
+            const table = document.getElementById("table_employees");
+            var rowCount = table.rows.length;
+            for (var i = rowCount - 1; i > 0; i--) {
+                table.deleteRow(i);
+            }
+            // Show table titles
+            table.getElementsByTagName('tr')[0].style.display = 'table-row';
+  
+            for (const emp of employees) {
+                const empRow = document.createElement("tr");
+                const nameCol = document.createElement("td");
+                nameCol.textContent = emp.firstName + ' ' + emp.lastName;
+
+                nameCol.addEventListener("click", function() {
+                    sessionStorage.setItem("sourcePage", "departments");
+                    window.location.href = "./editEmployee.html?firstName=" + emp.firstName + "&lastName=" + emp.lastName + "&year=" + emp.startWorkYear +"&department="+nameDepartment+ "&id=" + emp._id + "&names=" + names;
+                });
+
+                empRow.appendChild(nameCol);
+                table.appendChild(empRow);
+            }
+        }
+
+        function openPopup() {
+            document.getElementById("popup").style.display = "block";
+            // Show close button
+            document.querySelector("#popup button").style.display = "block";
+            // Show table titles
+            document.querySelectorAll("#table_employees th").forEach(title => {
+                title.style.display = "table-cell";
+            });
+        }
+
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+            // Empty the table and hide table titles
+            var table = document.getElementById("table_employees");
+            var rowCount = table.rows.length;
+            for (var i = rowCount - 1; i > 0; i--) {
+                table.deleteRow(i);
+            }
+            table.getElementsByTagName('tr')[0].style.display = 'none';
+        }
+
+        async function getDepartments() {
+            const username = sessionStorage.getItem("name");
+            const userId = sessionStorage.getItem("id");
+            document.getElementById("name").innerText = username;
+            const token = sessionStorage['token'];
+
+            const resp = await fetch('http://localhost:8000/departments', {
+                method: 'GET',
+                headers: {
+                    'x-access-token': token,
+                    'id': userId
+                },
+            });
+            
+            const departments = await resp.json();
+            if(departments==false){
+                alert("Action not allowed - come back tomorrow");
+                sessionStorage.clear();
+                window.location.href = "./login.html"
+            }
+
+            //display the departments in table
+            addDepartmentsToTable(departments);
+        }
+
+    </script>
+</body>

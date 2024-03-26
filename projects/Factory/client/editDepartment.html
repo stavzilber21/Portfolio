@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Department page</title>
+    <link rel="stylesheet" href="shifts.css">
+</head>
+<body onload="getData()">
+    <div class="form-container">
+        <h1>Edit Department Page</h1>
+        <h2 id="name"></h2>
+    
+        <form id="editDepartment">
+            <label for="Name">Name of Department:</label><br>
+            <input type="text" id="Name" name="Name"><br><br>
+    
+            <label for="manager">Manager:</label><br>
+            <select id="manager" name="manager"></select><br><br>
+    
+            <input type="submit" value="Update">
+            
+        </form>
+        <br>
+        <label for="addEmployee">Add Employee to Depatment:</label><br>
+        <select id="addEmployee" name="addEmployee"></select><br><br>
+        <button onclick="addEmployee()">Add</button>
+        <br>
+        <br>
+        <button onclick="deleteDepartment()">Delete Department</button>
+    </div>
+
+    <script>
+            async function addEmployee(){
+                const employeeToAdd = document.getElementById('addEmployee');
+                const selectedOption = employeeToAdd.options[employeeToAdd.selectedIndex];
+                const employeeID = selectedOption.getAttribute("employeeID");
+                const departmentID = selectedOption.getAttribute("departmentID");
+                const oldDepartment = selectedOption.getAttribute("oldDepartment");
+
+                const changeManager = await changeManagerNullIfHePassDepartment(employeeID,oldDepartment);
+
+                // Get the source page from session storage
+                const sourcePage = sessionStorage.getItem("sourcePage");
+
+                const token = sessionStorage['token'];
+                const resp = await fetch(`http://localhost:8000/employees/${employeeID}/changeDepartment`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-access-token': token
+                    },
+                    body: JSON.stringify({ departmentID })
+                });
+                const result = await resp.json();
+                if(result==false){
+                    alert("Action not allowed - come back tomorrow")
+                    sessionStorage.clear();
+                    window.location.href = "./login.html"
+                }
+                else{
+                    if (sourcePage === "employees") {
+                        location.href = "./employees.html";
+                    } else if (sourcePage === "departments") {
+                        location.href = "./departments.html";
+                    } else {
+                        // Default redirect
+                        location.href = "./employees.html";
+                    }
+                }
+                
+            }
+
+            //If employee pass the other department
+            async function changeManagerNullIfHePassDepartment(employeeID,departmentID){
+                const token = sessionStorage['token'];
+                const resp = await fetch("http://localhost:8000/departments", {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-access-token": token
+                },
+                body: JSON.stringify({
+                    employeeID,departmentID
+                })
+            });
+            }
+
+            async function selectAddEmployee(){
+               //get the name of department from the url
+               const name = getQueryParam('department'); 
+               const token = sessionStorage['token'];
+               //Get all the data of the current department
+               const respDep = await fetch("http://localhost:8000/departments/"+name, {
+                    method: 'GET',
+                    headers: { 'x-access-token': token },
+                });
+                const department = await respDep.json();
+                const id = department._id;
+          
+                const resp = await fetch('http://localhost:8000/employees/nameEmployees', {
+                    method: 'GET',
+                    headers: { 'x-access-token': token },
+                });
+                const employees = await resp.json();
+                // const { employees } = result;
+               
+                const addEmployeeDropdown = document.getElementById('addEmployee');
+                employees.forEach(emp=>{
+                    if(emp.departmentID!==id){
+                        const option = document.createElement('option');
+                        option.textContent = emp.firstName + ' ' + emp.lastName;
+                        option.value = emp.firstName + ' ' + emp.lastName;
+                        option.setAttribute("employeeID", emp._id);
+                        option.setAttribute("oldDepartment", emp.departmentID);
+                        option.setAttribute("departmentID",id);
+                        addEmployeeDropdown.add(option);
+                    }
+                })
+
+            }
+            async function deleteDepartment(){
+                //get the name of department from the url
+                const name = getQueryParam('department');
+                const token = sessionStorage['token'];
+
+                // Get the source page from session storage
+                const sourcePage = sessionStorage.getItem("sourcePage");
+
+                //Get all the data of the current department
+                const respDep = await fetch("http://localhost:8000/departments/"+name, {
+                    method: 'GET',
+                    headers: { 'x-access-token': token },
+                });
+                const department = await respDep.json();
+                const id = department._id;
+
+                const respDelDep = await fetch("http://localhost:8000/departments/" + id, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-access-token": token
+                    }
+                });
+                const response = await respDelDep.json();
+                if(response==false){
+                    alert("Action not allowed - come back tomorrow");
+                    sessionStorage.clear();
+                    window.location.href = "./login.html"
+                }
+                else{
+                    if (sourcePage === "employees") {
+                        location.href = "./employees.html";
+                    } else if (sourcePage === "departments") {
+                        location.href = "./departments.html";
+                    } else {
+                        // Default redirect
+                        location.href = "./employees.html";
+                    }
+                }   
+            }
+
+         async function getData() {
+            //get the name of user
+            const username = sessionStorage.getItem("name");
+            document.getElementById("name").innerText = username;
+
+            //get the name of department from the url
+            const name = getQueryParam('department');
+            document.getElementById('Name').value = name;
+            const token = sessionStorage['token'];
+            const resp = await fetch("http://localhost:8000/departments/"+name, {
+                method: 'GET',
+                headers: { 'x-access-token': token },
+            });
+            const department = await resp.json();
+            const managerID = department.manager;
+            const depId = department._id;
+            
+            getEmployeesDetails(managerID,depId);
+            selectAddEmployee();
+
+            // Add event listener for form submission
+            const form = document.getElementById("editDepartment");
+            form.addEventListener("submit", function(event) {
+                event.preventDefault(); // Prevent default form submission
+                updateData(department._id); // Call updateData function
+            });
+        }
+
+        async function getEmployeesDetails(managerID,depId){
+            const token = sessionStorage['token'];
+            const resp = await fetch('http://localhost:8000/employees/nameEmployees', {
+                method: 'GET',
+                headers: { 'x-access-token': token },
+            });
+            const employees = await resp.json();
+            // const { employees } = result;
+            //for change manager for this department
+            const managersDropdown = document.getElementById('manager');
+            employees.forEach(emp =>{
+                //the manager can be just employee from this department.
+                if(emp.departmentID===depId){
+                    const option = document.createElement('option');
+                    option.textContent = emp.firstName + ' ' + emp.lastName;
+                    option.value = emp.firstName + ' ' + emp.lastName;
+                    option.setAttribute("managerID", emp._id);
+                    managersDropdown.add(option);
+                    if(managerID===null){
+                        managersDropdown.value = "the manager deleted - please choose new manager";
+                    }
+                    if(emp._id===managerID){
+                        managersDropdown.value = emp.firstName + ' ' + emp.lastName;
+                    }
+                } 
+            })
+        }
+
+        async function updateData(depId) {
+            const id = depId;
+            
+            const name = document.getElementById('Name').value;
+            const Manager = document.getElementById('manager');
+            const selectedOption = Manager.options[Manager.selectedIndex];
+            const manager = selectedOption.getAttribute("managerID");
+            const token = sessionStorage.getItem("token");
+            if (!token) {
+                window.location.href = "./login.html";
+            }
+            // Get the source page from session storage
+            const sourcePage = sessionStorage.getItem("sourcePage");
+
+            const resp = await fetch("http://localhost:8000/departments/" + id, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-access-token": token
+                },
+                body: JSON.stringify({
+                    name,manager
+                })
+            });
+            
+            const response = await resp.json();
+            if(response==false){
+                alert("Action not allowed - come back tomorrow");
+                sessionStorage.clear();
+                window.location.href = "./login.html"
+            }
+            else{
+                if (sourcePage === "employees") {
+                    location.href = "./employees.html";
+                } else if (sourcePage === "departments") {
+                    location.href = "./departments.html";
+                } else {
+                    // Default redirect
+                    location.href = "./employees.html";
+                }
+            }    
+        }
+
+        function getQueryParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+    </script>
+</body>

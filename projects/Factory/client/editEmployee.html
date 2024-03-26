@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Employee page</title>
+    <link rel="stylesheet" href="shifts.css">
+</head>
+<body onload="getData()">
+
+<div class="form-container">
+    <h1>Edit Employees Page</h1>
+    <h2 id="name"></h2>
+
+    <form id="editForm">
+        <label for="firstName">First Name:</label><br>
+        <input type="text" id="firstName" name="firstName"><br><br>
+
+        <label for="lastName">Last Name:</label><br>
+        <input type="text" id="lastName" name="lastName"><br><br>
+
+        <label for="year">Year:</label><br>
+        <input type="text" id="year" name="year"><br><br>
+
+        <label for="department">Department:</label><br>
+        <select id="department" name="department"></select><br><br>
+
+        <input type="submit" value="Update">
+    </form>
+    <br>
+    <button onclick="deleteEmployee()">Delete Employee</button>
+    <br>
+    <br>
+    <label for="addShift">Add to Shift:</label><br>
+    <select id="addShift" name="addShift"></select><br><br>
+    <button onclick="addShift()">Add Shift</button>
+    <br>
+    <br>
+    <button onclick="showShifts()">Show Shifts</button> 
+    <br>
+    <div class="popup" id="popup">
+        
+        <table id="table_shifts" border="1">
+            <tr>
+                <th>Date</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+            </tr>
+        </table>
+        <button onclick="closePopup()">Close</button>
+    </div>
+</div>
+
+<script>
+    async function showShifts(){
+        const id = getQueryParam('id');
+        const token = sessionStorage['token'];
+
+        if (!token) {
+                window.location.href = "./login.html"
+        }
+        const resp = await fetch("http://localhost:8000/shifts/" + id, {
+            method: 'GET',
+            headers: { 'x-access-token': token },
+        });
+
+        const result = await resp.json();
+        const { hisShifts} = result;
+        openPopup();
+        showShiftsInTable(hisShifts);
+    }
+
+    function showShiftsInTable(shifts) {
+        const table = document.getElementById("table_shifts");
+            var rowCount = table.rows.length;
+            for (var i = rowCount - 1; i > 0; i--) {
+                table.deleteRow(i);
+            }
+            // Show table titles
+            table.getElementsByTagName('tr')[0].style.display = 'table-row';
+
+            shifts.forEach(shift => {
+                const shiftRow = document.createElement("tr");
+                const shiftDateCell = document.createElement("td");
+                const shiftStartTimeCell = document.createElement("td");
+                const shiftEndTimeCell = document.createElement("td");
+
+                // Extracting the date part in "YYYY-MM-DD" format
+                const shiftDate = new Date(shift.date).toISOString().split('T')[0];
+
+                shiftDateCell.textContent = shiftDate;
+                shiftStartTimeCell.textContent = shift.startingHour;
+                shiftEndTimeCell.textContent = shift.endingHour;
+                shiftRow.appendChild(shiftDateCell);
+                shiftRow.appendChild(shiftStartTimeCell);
+                shiftRow.appendChild(shiftEndTimeCell);
+                table.appendChild(shiftRow);
+            });
+    }
+ 
+    function openPopup() {
+            document.getElementById("popup").style.display = "block";
+            // Show close button
+            document.querySelector("#popup button").style.display = "block";
+            // Show table titles
+            document.querySelectorAll("#table_shifts th").forEach(title => {
+                title.style.display = "table-cell";
+            });
+        }
+
+
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+            // Empty the table and hide table titles
+            var table = document.getElementById("table_shifts");
+            var rowCount = table.rows.length;
+            for (var i = rowCount - 1; i > 0; i--) {
+                table.deleteRow(i);
+            }
+            table.getElementsByTagName('tr')[0].style.display = 'none';
+        }
+        
+    async function deleteEmployee() {
+        const id = getQueryParam('id');
+        const userId = sessionStorage.getItem("id");
+        const token = sessionStorage.getItem("token");
+        if (!token) {
+            window.location.href = "./login.html";
+        }
+        
+        const resp = await fetch("http://localhost:8000/employees/delete/" + id, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "x-access-token": token,
+                'id': userId
+            }
+        });
+
+        const response = await resp.json();
+        if(response==false){
+            alert("Action not allowed - come back tomorrow");
+            sessionStorage.clear();
+            window.location.href = "./login.html"
+        }
+        else{
+            location.href = "./employees.html";
+        }
+       
+    }
+
+    function getQueryParam(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
+
+    async function getData() {
+        //get the name of user
+        const username = sessionStorage.getItem("name");
+        document.getElementById("name").innerText = username;
+        //get the data of the employee from the url
+        const firstName = getQueryParam('firstName');
+        const lastName = getQueryParam('lastName');
+        const year = getQueryParam('year');
+        const department = getQueryParam('department'); //the name of department
+        
+        // Populate form fields with employee data
+        document.getElementById('firstName').value = firstName;
+        document.getElementById('lastName').value = lastName;
+        document.getElementById('year').value = year;
+
+        const token = sessionStorage['token'];
+
+        const departmentDropdown = document.getElementById('department');
+        //get the name departments to select
+        const respDep = await fetch('http://localhost:8000/departments/notAction', {
+                method: 'GET',
+                headers: { 'x-access-token': token },
+            });
+            
+        const departments = await respDep.json();
+        departments.forEach(dep=>{
+            const option = document.createElement('option');
+            option.textContent = dep.name;
+            option.value = dep.name;
+            departmentDropdown.add(option);
+
+            if(dep.name === department){
+                departmentDropdown.setAttribute('oldDepartmentId', dep._id);
+            }
+        })
+        departmentDropdown.value = department;
+
+        
+        // Add event listener for form submission
+        const form = document.getElementById("editForm");
+        form.addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent default form submission
+            updateData(); // Call updateData function
+        });
+
+        //for to add a new shift to employee
+        const id = getQueryParam('id');
+
+
+        if (!token) {
+                window.location.href = "./login.html"
+        }
+        const resp = await fetch("http://localhost:8000/shifts/" + id, {
+            method: 'GET',
+            headers: { 'x-access-token': token },
+        });
+
+        const result = await resp.json();
+        const { hisNotShifts} = result;
+        const shiftsDropdown = document.getElementById('addShift');
+        if(hisNotShifts){
+           hisNotShifts.forEach(shift =>{
+            const option = document.createElement('option');
+            // Extracting the date part in "YYYY-MM-DD" format
+            const shiftDate = new Date(shift.date).toISOString().split('T')[0];
+                option.textContent ="Date: "+ shiftDate+ " | Hours: "+ shift.startingHour + " - "+ shift.endingHour;
+                option.value ="Date: "+  shift.date+ " | Hours: "+ shift.startingHour + " - "+ shift.endingHour;
+                option.setAttribute("shiftId", shift._id);
+                shiftsDropdown.add(option);
+           }) 
+        }
+    }
+
+    async function addShift (){
+        const employeeID = getQueryParam('id');
+        const shiftToAdd = document.getElementById('addShift');
+        const selectedOption = shiftToAdd.options[shiftToAdd.selectedIndex];
+        const shiftID = selectedOption.getAttribute("shiftId");
+        const token = sessionStorage.getItem("token");
+        if (!token) {
+            window.location.href = "./login.html";
+        }
+        const resp = await fetch("http://localhost:8000/employeeShift" , {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "x-access-token": token
+            },
+            body: JSON.stringify({
+                employeeID,shiftID
+            })
+        });
+        const response = await resp.json();
+         // Remove the selected shift from the dropdown
+        shiftToAdd.remove(selectedOption.index);
+    }
+
+    async function updateData() {
+        const id = getQueryParam('id');
+
+        const userId = sessionStorage.getItem("id");
+
+        const firstName = document.getElementById('firstName').value;
+        const lastName= document.getElementById('lastName').value;
+        const startWorkYear = document.getElementById('year').value;
+
+        //here this is the name of department - and in the service this is change to the departmentID
+        const departmentID = document.getElementById('department').value;
+
+        // Get the original name department value from the URL parameter
+        const originalDepartment = getQueryParam('department');
+
+        // Check if another department is selected - The comparison is of the departments names
+        //we need to check if this employee was the manager in originalDepartment 
+        if (departmentID !== originalDepartment) {
+            const departmentDropdown = document.getElementById('department');
+            const oldDepartmentId = departmentDropdown.getAttribute('oldDepartmentId');
+            const changeManager = await changeManagerNullIfHePassDepartment(id ,oldDepartmentId);
+        }
+
+        const token = sessionStorage.getItem("token");
+        if (!token) {
+            window.location.href = "./login.html";
+        }
+         // Get the source page from session storage
+        const sourcePage = sessionStorage.getItem("sourcePage");
+        const resp = await fetch("http://localhost:8000/employees/update/" + id, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "x-access-token": token,
+                "id": userId
+            },
+            body: JSON.stringify({
+                firstName, lastName, startWorkYear, departmentID
+            })
+        });
+        const response = await resp.json();
+        if(response==false){
+            alert("Action not allowed - come back tomorrow");
+            sessionStorage.clear();
+            window.location.href = "./login.html"
+        }
+        else{
+            // Redirect based on the source page
+            if (sourcePage === "employees") {
+                location.href = "./employees.html";
+            } else if (sourcePage === "departments") {
+                location.href = "./departments.html";
+            } else {
+                // Default redirect
+                location.href = "./employees.html";
+            }
+        }
+        
+    }
+
+    //If employee pass the other department
+    async function changeManagerNullIfHePassDepartment(employeeID,departmentID){
+        const token = sessionStorage['token'];
+        const resp = await fetch("http://localhost:8000/departments", {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "x-access-token": token
+        },
+        body: JSON.stringify({
+            employeeID,departmentID
+        })
+    });
+    }
+</script>
+</body>
+</html>

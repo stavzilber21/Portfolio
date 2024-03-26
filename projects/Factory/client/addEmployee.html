@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Add Employee page</title>
+        <link rel="stylesheet" href="shifts.css">
+    </head>
+    <body onload="getData()">
+       
+        <div class="form-container">
+            <h1>Add Employees Page</h1>
+            <h2 id="name"></h2>
+        
+            <form id="addForm">
+                <label for="firstName">First Name:</label><br>
+                <input type="text" id="firstName" name="firstName"><br><br>
+        
+                <label for="lastName">Last Name:</label><br>
+                <input type="text" id="lastName" name="lastName"><br><br>
+        
+                <label for="year">Year:</label><br>
+                <input type="text" id="year" name="year"><br><br>
+        
+                <label for="department">Department:</label><br>
+                <select id="department" name="department"></select><br><br>
+        
+                <input type="submit" value="Save">
+                
+            </form>
+            <br>
+            <button onclick="cancel()">Cancel</button>
+        </div>
+        <script>
+                async function cancel(){
+                    location.href = "./employees.html"; 
+                }
+                async function getData() {
+                    //get the name of user
+                    const username = sessionStorage.getItem("name");
+                    document.getElementById("name").innerText = username;
+
+                    const token = sessionStorage['token'];
+
+                    if (!token) {
+                            window.location.href = "./login.html"
+                    }
+                    const resp = await fetch("http://localhost:8000/departments/notAction", {
+                        method: 'GET',
+                        headers: { 'x-access-token': token },
+                    });
+
+                    const result = await resp.json();
+
+                    const departmentsDropdown = document.getElementById('department');
+
+                    result.forEach(dep =>{
+                        const option = document.createElement('option');
+                        option.textContent = dep.name;
+                        option.value = dep.name;
+                        option.setAttribute("departmentID", dep._id);
+                        departmentsDropdown.add(option);
+                    })
+
+                     // Add event listener for form submission
+                    const form = document.getElementById("addForm");
+                    form.addEventListener("submit", function(event) {
+                        event.preventDefault(); // Prevent default form submission
+                        addEmployee(); // Call addEmployee function
+                    });
+                    
+                }
+                async function addEmployee(){
+                    //the data of the new employee
+                    const firstName = document.getElementById('firstName').value;
+                    const lastName= document.getElementById('lastName').value;
+                    const startWorkYear = document.getElementById('year').value;
+
+                    const department = document.getElementById('department');
+                    const selectedOption = department.options[department.selectedIndex];
+                    const departmentID = selectedOption.getAttribute("departmentID");
+
+                    const token = sessionStorage.getItem("token");
+                    if (!token) {
+                        window.location.href = "./login.html";
+                    }
+                    const resp = await fetch("http://localhost:8000/employees" ,{
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-access-token": token
+                        },
+                        body: JSON.stringify({
+                            firstName, lastName, startWorkYear, departmentID
+                        })
+                    });
+                    const response = await resp.json();
+                    if(response==false){
+                        alert("Action not allowed - come back tomorrow");
+                        sessionStorage.clear();
+                        window.location.href = "./login.html"
+                    }
+                    const {employeeID} = response;
+            
+                    const shifts = [];
+                    const resp1 = await fetch("http://localhost:8000/employeeShift" ,{
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-access-token": token
+                        },
+                        body: JSON.stringify({
+                            employeeID, shifts
+                        })
+                    });
+                    const response1 = await resp1.json();
+                    location.href = "./employees.html"; 
+                }
+        </script>
+    </body>
+</html>

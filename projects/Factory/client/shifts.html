@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Shifts page</title>
+        <link rel="stylesheet" href="shifts.css">
+    </head>
+</html>
+<body onload="getShifts()">
+    <div id="links">
+        <a href="#" onclick="logOut()">Disconnect</a> |
+        <a href="home.html">Home</a>
+    </div>
+    <h1>Shifts Page</h1>
+    <h2 id="name"></h2>
+    <div class="container">
+        <div class="form-column">
+            <div class="form-container">
+
+                <h3>Add Shift:</h3>
+                <form id="addForm">
+                    <label for="date">Select a Date:</label><br>
+                    <input type="date" id="date" name="date"><br><br>
+    
+                    <label for="start-time">Start Time:</label>
+                    <input type="time" id="start-time" name="start-time">
+    
+                    <label for="end-time">End Time:</label>
+                    <input type="time" id="end-time" name="end-time"><br><br>
+    
+                    <input type="submit" value="Save">
+                    
+                </form>
+                <br>
+                <button onclick="cancel()">Cancel</button>
+            </div>
+        </div>
+        <div class="form-column">
+            <div class="form-container">
+                <h3>Edit Shift:</h3>
+                <form id="editForm">
+                    <label for="shift">Select shift:</label><br>
+                    <select id="shift" name="shift" onchange="populateShiftData()"></select><br><br>
+
+                    <label for="date2">Select a Date:</label><br>
+                    <input type="date" id="date2" name="date2"><br><br>
+    
+                    <label for="start-time2">Start Time:</label>
+                    <input type="time" id="start-time2" name="start-time2">
+    
+                    <label for="end-time2">End Time:</label>
+                    <input type="time" id="end-time2" name="end-time2"><br><br>
+
+                    <label for="add">Add employee to shift:</label><br>
+                    <select id="add" name="add"></select><br><br>
+
+    
+                    <input type="submit" value="Save">
+                    
+                </form>
+                <br>
+                <button onclick="cancel()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+<script>
+    async function logOut() {
+                sessionStorage.clear();
+                window.location.href = "./login.html"
+        }
+        
+     async function cancel(){
+        location.href = "./home.html"; 
+     }
+
+     async function getShifts() {
+        //get the name of user
+        const username = sessionStorage.getItem("name");
+        document.getElementById("name").innerText = username;
+
+        const token = sessionStorage['token'];
+        const resp = await fetch('http://localhost:8000/shifts', {
+            method: 'GET',
+            headers: { 'x-access-token': token },
+        });
+        //Select shift to edit
+        const shifts = await resp.json();
+        const shiftsDropdown = document.getElementById('shift');
+        shifts.forEach(shift=> {
+            // Extracting the date part in "YYYY-MM-DD" format
+            const shiftDate = new Date(shift.date).toISOString().split('T')[0];
+            const option = document.createElement('option');
+            option.textContent ="Date: "+ shiftDate+ " | Hours: "+ shift.startingHour + " - "+ shift.endingHour;
+            option.value ="Date: "+  shiftDate+ " | Hours: "+ shift.startingHour + " - "+ shift.endingHour;
+            option.setAttribute("shiftID", shift._id);
+            option.setAttribute("date", shift.date);
+            option.setAttribute("startingHour", shift.startingHour);
+            option.setAttribute("endingHour", shift.endingHour);
+
+            shiftsDropdown.add(option);
+        });
+
+
+
+          // Add event listener for form submission
+          const form = document.getElementById("addForm");
+            form.addEventListener("submit", function(event) {
+                event.preventDefault(); // Prevent default form submission
+                addShift(); // Call addDepartment function
+            });
+
+            const form1 = document.getElementById("editForm");
+            form1.addEventListener("submit", function(event) {
+                event.preventDefault(); // Prevent default form submission
+                saveEditedShift(); // Call addDepartment function
+            });
+     }
+
+     
+    //Add a new shift to database
+    async function addShift(){
+        const date = document.getElementById('date').value;
+        const startingHour = document.getElementById('start-time').value;
+        const endingHour = document.getElementById('end-time').value;
+        const token = sessionStorage.getItem("token");
+        const userId = sessionStorage.getItem("id");
+        if (!token) {
+            window.location.href = "./login.html";
+        }
+        const resp = await fetch("http://localhost:8000/shifts" ,{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-access-token": token,
+                "id": userId
+            },
+            body: JSON.stringify({
+               date,startingHour,endingHour
+            })
+        });
+        const response = await resp.json();
+        if(response==false){
+            alert("Action not allowed - come back tomorrow")
+                sessionStorage.clear();
+                window.location.href = "./login.html"
+        }
+        else{
+            location.href = "./home.html"; 
+        }
+        
+     }
+
+    
+     //to display the data of the shift selected
+    async function populateShiftData() {
+        const selectedShift = document.getElementById('shift');
+        const selectedOption = selectedShift.options[selectedShift.selectedIndex];
+        const shiftID = selectedOption.getAttribute("shiftID");
+
+        const startingHour = selectedOption.getAttribute("startingHour");
+        const endingHour = selectedOption.getAttribute("endingHour");
+        const dateTimeString = selectedOption.getAttribute("date");
+        const date = new Date(dateTimeString).toISOString().split('T')[0]; // Extract date part
+        document.getElementById('date2').value = date;
+        document.getElementById('start-time2').value = startingHour;
+        document.getElementById('end-time2').value = endingHour;
+
+        const token = sessionStorage.getItem("token");
+
+        // Clear the dropdown before adding new options
+        const addDropdown = document.getElementById('add');
+        addDropdown.innerHTML = ""; // Clear the dropdown options
+
+        //Get employees that isn't is this shift
+        const response = await fetch('http://localhost:8000/employeeShift/'+shiftID, {
+            method: 'GET',
+            headers: { 'x-access-token': token },
+        });
+        const employees = await response.json();
+        
+        // Add new options for employees that isn't is this shift
+        for (const emp of employees) {
+            const option = document.createElement('option');
+            const name = await getNameOfEmployee(emp.employeeID);
+            option.textContent = name;
+            option.value = name;
+            option.setAttribute("employeeID",emp.employeeID);
+            addDropdown.add(option);
+        };
+
+    }
+
+     //For the selected that add employee to shift
+     async function getNameOfEmployee(id){
+        const token = sessionStorage['token'];
+        const resp = await fetch("http://localhost:8000/employees/employee/" + id, {
+            method: 'GET',
+            headers: { 'x-access-token': token },
+        });
+        const employee = await resp.json();
+        return employee.firstName + ' ' + employee.lastName;
+     }
+
+      // Function to save edited shift data
+    async function saveEditedShift() {
+        const selectedShift = document.getElementById('shift');
+        const selectedOption = selectedShift.options[selectedShift.selectedIndex];
+        const id = selectedOption.getAttribute("shiftID");
+        const newDate = document.getElementById('date2').value;
+        const newStartingHour = document.getElementById('start-time2').value;
+        const newEndingHour = document.getElementById('end-time2').value;
+        const userId = sessionStorage.getItem("id");
+
+        const token = sessionStorage.getItem("token");
+        const resp = await fetch("http://localhost:8000/shifts/"+id ,{
+            method: "PUT", // Assuming PUT method is used for updating shifts
+            headers: {
+                "Content-Type": "application/json",
+                "x-access-token": token,
+                "id": userId
+            },
+            body: JSON.stringify({
+            date: newDate,
+            startingHour: newStartingHour,
+            endingHour: newEndingHour
+            })
+        });
+        const response = await resp.json();
+        if(response==false){
+            alert("Action not allowed - come back tomorrow")
+                sessionStorage.clear();
+                window.location.href = "./login.html"
+        }
+        else{
+            // Check if an employee is selected
+            const selectedAdd = document.getElementById('add');
+            if (selectedAdd.selectedIndex !== -1) {
+                // If an employee is selected, add the employee to the shift
+                const addEmlpoyee = await addEmlpoyeeToShift(id);
+            }
+            location.href = "./home.html"; 
+        }
+
+    }
+
+    //In the save function, call this - add the employee selected to shift selected
+    async function addEmlpoyeeToShift(shiftID){
+        const selectedAdd = document.getElementById('add');
+        const selectedOption = selectedAdd.options[selectedAdd.selectedIndex];
+        const employeeID = selectedOption.getAttribute("employeeID");
+        const token = sessionStorage.getItem("token");
+
+        const resp = await fetch("http://localhost:8000/employeeShift" , {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "x-access-token": token
+            },
+            body: JSON.stringify({
+                employeeID,shiftID
+            })
+        });
+        const response = await resp.json();
+        return { 'response': 'added' }
+    }
+
+
+</script>
+</body>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employees page</title>
+    <link rel="stylesheet" href="shifts.css">
+
+</head>
+<body onload="getEmployees()">
+    <div id="links">
+        <a href="#" onclick="logOut()">Disconnect</a> |
+        <a href="home.html">Home</a>
+    </div>
+    <h1>Employees Page</h1>
+    <h2 id="name"></h2>
+    <br>
+    <button onclick="addNewEmployee()">Add Employee</button>
+    <br>
+    <h3>Emloyees: </h3>
+    <table id="table" border="1">
+        <tr>
+            <th>Full Name</th>
+            <th>Department</th>
+            <th>Shifts</th>
+        </tr>
+    </table>
+    <Br>
+
+    <label for="filter">Filter Department:</label><br>
+    <select id="filter" name="filter"></select><br><br>
+
+    <div class="popup" id="popup">
+        
+        <table id="table_shifts" border="1">
+            <tr>
+                <th>Date</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+            </tr>
+        </table>
+        <button onclick="closePopup()">Close</button>
+    </div>
+
+    <script>
+        async function logOut() {
+                sessionStorage.clear();
+                window.location.href = "./login.html"
+        }
+        function addNewEmployee(){
+            window.location.href = "./addEmployee.html"
+        }
+        function addEmployeesToTable(result) {
+            const table = document.getElementById("table");
+            const { employees, employeesWithShifts, departments } = result;
+
+            employees.forEach(emp => {
+                const empTr = document.createElement("tr");
+                const empTdName = document.createElement("td");
+                const emptdDepartment = document.createElement("td");
+                const buttonTd = document.createElement("td");
+                const button = document.createElement("button");
+                button.textContent = "Show Shifts";
+              
+                const shifts = employeesWithShifts.find(item => item.employeeId === emp._id).shifts;
+                // ^ Find the shifts corresponding to the current employee by matching employee IDs
+                button.addEventListener("click", function() {
+                    openPopup();
+                    showShifts(shifts);
+                });
+
+                const nameDepartment = departments.find(dep => dep._id === emp.departmentID).name;
+                //^Find the name's department of the current employee by matching employee IDs
+
+                empTdName.addEventListener("click", function() {
+                    sessionStorage.setItem("sourcePage", "employees");
+                    const names = departments.map(dep => dep.name);
+                    window.location.href = "./editEmployee.html?firstName=" + emp.firstName + "&lastName=" + emp.lastName + "&year=" + emp.startWorkYear +"&department="+nameDepartment+ "&id=" + emp._id;
+                });
+
+                emptdDepartment.addEventListener("click", function() {
+                    sessionStorage.setItem("sourcePage", "employees");
+                    window.location.href = "./editDepartment.html?&department=" + nameDepartment;
+                }
+
+                )
+     
+                empTdName.innerText = emp.firstName + ' ' + emp.lastName;
+                emptdDepartment.innerText = nameDepartment;
+
+                buttonTd.appendChild(button);
+                empTr.appendChild(empTdName);
+                empTr.appendChild(emptdDepartment);
+                empTr.appendChild(buttonTd);
+
+                table.appendChild(empTr);
+            });
+        }
+        function showShifts(shifts) {
+            const table = document.getElementById("table_shifts");
+            var rowCount = table.rows.length;
+            for (var i = rowCount - 1; i > 0; i--) {
+                table.deleteRow(i);
+            }
+            // Show table titles
+            table.getElementsByTagName('tr')[0].style.display = 'table-row';
+  
+            shifts.forEach(shift => {
+                const shiftRow = document.createElement("tr");
+                const shiftDateCell = document.createElement("td");
+                const shiftStartTimeCell = document.createElement("td");
+                const shiftEndTimeCell = document.createElement("td");
+
+                // Extracting the date part in "YYYY-MM-DD" format
+                const shiftDate = new Date(shift.date).toISOString().split('T')[0];
+
+                shiftDateCell.textContent = shiftDate;
+                shiftStartTimeCell.textContent = shift.startingHour;
+                shiftEndTimeCell.textContent = shift.endingHour;
+                shiftRow.appendChild(shiftDateCell);
+                shiftRow.appendChild(shiftStartTimeCell);
+                shiftRow.appendChild(shiftEndTimeCell);
+                table.appendChild(shiftRow);
+            });
+        }
+ 
+        function openPopup() {
+            document.getElementById("popup").style.display = "block";
+            // Show close button
+            document.querySelector("#popup button").style.display = "block";
+            // Show table titles
+            document.querySelectorAll("#table_shifts th").forEach(title => {
+                title.style.display = "table-cell";
+            });
+        }
+
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+            // Empty the table and hide table titles
+            var table = document.getElementById("table_shifts");
+            var rowCount = table.rows.length;
+            for (var i = rowCount - 1; i > 0; i--) {
+                table.deleteRow(i);
+            }
+            table.getElementsByTagName('tr')[0].style.display = 'none';
+        }
+       
+        async function getEmployees() {
+            const username = sessionStorage.getItem("name")
+            const userId = sessionStorage.getItem("id")
+            // const currentDate = sessionStorage.getItem("currentDate")
+            document.getElementById("name").innerText = username;
+            const token = sessionStorage['token'];
+
+            if (!token) {
+                    window.location.href = "./login.html"
+            }
+            const resp = await fetch("http://localhost:8000/employees", {
+                method: 'GET',
+                headers: {
+                    'x-access-token': token,
+                    'id': userId
+                },
+            });
+            
+            const result = await resp.json();
+            if(result==false){
+                alert("Action not allowed - come back tomorrow");
+                sessionStorage.clear();
+                window.location.href = "./login.html"
+            }
+            
+            const {departments } = result;
+
+            // Add "All" option to the dropdown menu
+            const departmentDropdown = document.getElementById('filter');
+            const allOption = document.createElement('option');
+            allOption.textContent = 'ALL';
+            allOption.value = 'ALL';
+            departmentDropdown.appendChild(allOption);
+
+            //get the names departments to filter employees
+            departments.forEach(dep => {
+                const option = document.createElement('option');
+                option.textContent = dep.name;
+                option.value = dep.name;
+                departmentDropdown.add(option);
+            })
+            
+            //Filtering the employees from the selected department
+            document.getElementById('filter').addEventListener('change', function() {
+                const selectedDepartment = this.value;
+                const tableRows = document.getElementById('table').getElementsByTagName('tr');
+
+                for (let i = 1; i < tableRows.length; i++) {
+                    const departmentCell = tableRows[i].getElementsByTagName('td')[1]; // Assuming department cell is the second cell
+
+                    if (departmentCell.textContent === selectedDepartment || selectedDepartment === 'ALL') {
+                        tableRows[i].style.display = ''; // Show row
+                    } else {
+                        tableRows[i].style.display = 'none'; // Hide row
+                    }
+                }
+            });
+
+            //display the employees in table
+            addEmployeesToTable(result);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<html>
+    <head>
+        <title>Home page</title>
+        <link rel="stylesheet" href="nav.css">
+    </head>
+    <body onload="getName()">
+        <nav>
+            <ul class="topnav" id="dropdownClick">
+                <li><a  href="./employees.html">Employees</a></li>
+                <li><a  href="./departments.html">Departments</a></li>
+                <li><a  href="./shifts.html">Shifts</a></li>
+                <li><a  href="./users.html">Users</a></li>
+                <li><a onclick="logOut()">Log Out</a></li>
+                
+                <!-- <li><a  href="./login.html">Log Out</a></li> -->
+            </ul>
+        </nav>
+        <h2 id="name"></h2>
+
+        <script>
+             async function getName() {
+                const username = sessionStorage.getItem("name");
+                document.getElementById("name").innerText = "Welcome "+username;
+            }
+            async function logOut() {
+                sessionStorage.clear();
+                window.location.href = "./login.html"
+            }
+        </script>
+    </body>
+</html>
