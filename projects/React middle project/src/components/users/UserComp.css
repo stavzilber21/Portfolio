@@ -1,0 +1,24 @@
+.user-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 290px;
+    margin: 6px;
+    padding: 6px;
+  }
+  
+  .user-container-green {
+    border: solid 2px green;
+  }
+  
+  .user-container-red {
+    border: solid 2px red;
+  }
+  
+  .user-details {
+    margin-right: 20px; /* Adjust this value according to your preference */
+  }
+
+.clicked {
+    background-color: orange;
+}
