@@ -2,18 +2,13 @@ import { useState ,useEffect} from 'react'
 import axios from 'axios';
 import TodoComp from "./Todo";
 
-const TODOS_URL = "https://jsonplaceholder.typicode.com/todos";
 
-export const TodosComp = (props) => {
-    const [todos, setTodos] = useState([]);
+export const TodosComp = ({ todos, userId, onMarkComplete}) => {
   
     useEffect(() => {
-        async function getData() {
-            let resp = await axios.get(`${TODOS_URL}?userId=${props.id}`);
-            setTodos(resp.data);
-        }
-        getData();
-    }, [props.id]);
+        
+    }, [userId]);
+
   return (
     <div style={{border : "2px solid black"}}>
        
@@ -21,7 +16,7 @@ export const TodosComp = (props) => {
         todos.map((todo) =>
         {
            
-            return <TodoComp key={todo.id} todoData={todo} />
+            return <TodoComp key={todo.id} todoData={todo}  onMarkComplete={()=>onMarkComplete(todo.id)}/>
         })
       }
       </div>
