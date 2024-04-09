@@ -11,6 +11,7 @@ function UsersComp() {
   const [posts, setPosts] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(0);
   const [isSelectedId, setIsSelectedId] = useState(false);
+  
 
   useEffect(() => {
     async function getData() {
@@ -79,6 +80,15 @@ function UsersComp() {
     });
   };
 
+  const addTodo =(todoObj)=>{
+    const newTodos = [...todos, todoObj];
+    setTodos(newTodos);
+  }
+
+  const addPost =()=>{
+    
+  }
+
   // If user id selected, will filter the lists according to the user id
   let userTodos = todos;
   let userPosts = posts;
@@ -89,12 +99,17 @@ function UsersComp() {
 
   return (
     <div style={{ display: "flex", margin: "8px" }}>
+      <div>
+        
+      </div>
       <div
         style={{
           width: "350px",
           border: "solid 2px gray",
           borderRadius: "25px",
           padding: "10px",
+          overflowY: "scroll", // Enable vertical scrolling
+          maxHeight: "500px", // Limit the height to prevent excessive scrolling
         }}
       >
         Search: <input type="text" onChange={(e) => setText(e.target.value)} />
@@ -129,18 +144,22 @@ function UsersComp() {
       <div style={{ margin: "20px 30px", width: "350px" }}>
         {isSelectedId && (
           <>
-            <p>Todos - User {selectedUserId}</p>
             <TodosComp
               todos={userTodos}
+              todosLen={todos.length}
               userId={selectedUserId}
               onMarkComplete={markCompleted}
+              onAddTodo={addTodo}
             />
           </>
         )}
         {isSelectedId && (
           <>
-            <p>Posts - User {selectedUserId}</p>
-            <PostComp id={selectedUserId} />
+            <p>Posts - User {selectedUserId}</p> <button onClick={addPost}>Add</button>
+            <PostComp 
+              posts={userPosts}
+              userId={selectedUserId}
+            />
           </>
         )}
       </div>
