@@ -1,5 +1,4 @@
 import { useState ,useEffect} from 'react'
-import axios from 'axios';
 import TodoComp from "./Todo";
 
 
@@ -37,9 +36,11 @@ export const TodosComp = ({ todos,todosLen, userId, onMarkComplete,onAddTodo}) =
 
   return (
     <>
-    <div>
-      <p>Todos - User {userId}</p> <button onClick={addTodoHandler}>Add</button>
+    <div style={{ display: "flex", justifyContent: "space-between" }}>
+      <p>Todos - User {userId}</p>
+      <button onClick={addTodoHandler}>Add</button>
     </div>
+
       <div style={{border : "2px solid black"}}>
         
         {!addTodo &&

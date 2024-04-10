@@ -11,6 +11,7 @@ function UsersComp() {
   const [posts, setPosts] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(0);
   const [isSelectedId, setIsSelectedId] = useState(false);
+
   
 
   useEffect(() => {
@@ -85,7 +86,12 @@ function UsersComp() {
     setTodos(newTodos);
   }
 
-  const addPost =()=>{
+  const addPost =(postObj)=>{
+    const newPosts = [...posts, postObj];
+    setPosts(newPosts);
+  }
+
+  const addUser =()=>{
     
   }
 
@@ -99,46 +105,51 @@ function UsersComp() {
 
   return (
     <div style={{ display: "flex", margin: "8px" }}>
-      <div>
-        
-      </div>
+
       <div
         style={{
           width: "350px",
           border: "solid 2px gray",
-          borderRadius: "25px",
-          padding: "10px",
-          overflowY: "scroll", // Enable vertical scrolling
+          borderRadius: "30px",
+          padding: "10px", // Enable vertical scrolling
           maxHeight: "500px", // Limit the height to prevent excessive scrolling
         }}
       >
-        Search: <input type="text" onChange={(e) => setText(e.target.value)} />
-        {searchChange().map((user) => {
-          const userTodos = todos.filter((todo) => todo.userId === user.id);
-          const allTodosCompleted = userTodos.every((todo) => todo.completed);
-            let frame = 'red';
-            if(allTodosCompleted){
-              frame ='green'
-            }
-            let backgnd = 'initial';
-            // Check if user id label pressed, to change the background color
-            if (user.id === selectedUserId) {
-              backgnd = 'orange';
-            }
-            return(
-              <div key={user.id} style={{ marginBottom: "10px" }}>
-              <UserComp
-                backgnd ={backgnd}
-                frame={frame}
-                userData={user}
-                onUpdate={handleUpdate}
-                onDelete={handleDelete}
-                onIdSelect={selectIdHandler}
-              />
-            </div>
-            )
-         
-        } )}
+        <div style={{padding: "4px",margin: "4px", display: "flex", justifyContent: "space-between" }}>
+          Search <input type="text" onChange={(e) => setText(e.target.value)} />
+          <button onClick={addUser}>Add</button>
+        </div>
+        <div style={{
+          overflowY: "scroll",maxHeight: "450px",padding: "4px",margin: "4px"}}>
+               
+          {searchChange().map((user) => {
+            const userTodos = todos.filter((todo) => todo.userId === user.id);
+            const allTodosCompleted = userTodos.every((todo) => todo.completed);
+              let frame = 'red';
+              if(allTodosCompleted){
+                frame ='green'
+              }
+              let backgnd = 'initial';
+              // Check if user id label pressed, to change the background color
+              if (user.id === selectedUserId) {
+                backgnd = 'orange';
+              }
+              return(
+                <div key={user.id} style={{ marginBottom: "10px" }}>
+                <UserComp
+                  backgnd ={backgnd}
+                  frame={frame}
+                  userData={user}
+                  onUpdate={handleUpdate}
+                  onDelete={handleDelete}
+                  onIdSelect={selectIdHandler}
+                />
+              </div>
+              )
+          
+          } )}
+        </div>
+ 
       </div>
 
       <div style={{ margin: "20px 30px", width: "350px" }}>
@@ -155,10 +166,11 @@ function UsersComp() {
         )}
         {isSelectedId && (
           <>
-            <p>Posts - User {selectedUserId}</p> <button onClick={addPost}>Add</button>
             <PostComp 
               posts={userPosts}
+              postsLen={posts.length}
               userId={selectedUserId}
+              onAddPost={addPost}
             />
           </>
         )}
