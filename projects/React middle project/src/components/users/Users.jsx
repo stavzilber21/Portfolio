@@ -3,6 +3,8 @@ import axios from "axios";
 import UserComp from "./User";
 import TodosComp from "../todos/Todos";
 import PostComp from "../posts/Posts";
+import AddUserComp from "./addUser";
+import Button from "../UI/Button";
 
 function UsersComp() {
   const [users, setUsers] = useState([]);
@@ -11,6 +13,7 @@ function UsersComp() {
   const [posts, setPosts] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(0);
   const [isSelectedId, setIsSelectedId] = useState(false);
+  const [isAddUser, setIsAddUser] = useState(false);
 
   
 
@@ -91,8 +94,25 @@ function UsersComp() {
     setPosts(newPosts);
   }
 
-  const addUser =()=>{
-    
+  const addUserState =()=>{
+    setIsAddUser(true);
+  }
+
+  const addUser = (userObj) => {
+    const maxId = users.reduce((max, user) => {
+        return user.id > max ? user.id : max;
+    }, 0);
+    userObj.id = maxId + 1;
+
+    const newUsers = [...users, userObj];
+    setUsers(newUsers);
+    setIsAddUser(false);
+}
+
+
+  //to cancel the addition of user
+  const cancel = ()=>{
+    setIsAddUser(false);
   }
 
   // If user id selected, will filter the lists according to the user id
@@ -112,15 +132,21 @@ function UsersComp() {
           border: "solid 2px gray",
           borderRadius: "30px",
           padding: "10px", // Enable vertical scrolling
-          maxHeight: "500px", // Limit the height to prevent excessive scrolling
+          maxHeight: "550px", // Limit the height to prevent excessive scrolling
+          margin: "7px",
+          backgroundColor: "#ffe"
         }}
       >
         <div style={{padding: "4px",margin: "4px", display: "flex", justifyContent: "space-between" }}>
           Search <input type="text" onChange={(e) => setText(e.target.value)} />
-          <button onClick={addUser}>Add</button>
+          <Button
+          type="button"
+          title="Add"
+          onClick={addUserState}
+        />
         </div>
         <div style={{
-          overflowY: "scroll",maxHeight: "450px",padding: "4px",margin: "4px"}}>
+          overflowY: "scroll",maxHeight: "450px",padding: "4px",margin: "7px"}}>
                
           {searchChange().map((user) => {
             const userTodos = todos.filter((todo) => todo.userId === user.id);
@@ -174,6 +200,16 @@ function UsersComp() {
             />
           </>
         )}
+      </div>
+
+      {/* addUser */}
+      <div>
+          {isAddUser && 
+            <AddUserComp
+              onCancel={cancel}
+              onAddUser = {addUser}
+            />
+          }
       </div>
     </div>
   );

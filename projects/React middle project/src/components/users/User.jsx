@@ -1,6 +1,7 @@
 import { useState} from 'react';
 import OtherDataComp from './OtherData';
-// import './UserComp.css';
+import Button from "../UI/Button";
+
 
 
 
@@ -43,10 +44,25 @@ function UserComp({backgnd,userData,onUpdate,onDelete,onIdSelect,frame}) {
                 <div onClick={()=>selectUser(userData.id)}>ID: {userData.id}</div>
                 Name: <input type='text' defaultValue={userData.name} onChange={e=>handleNameChange(e)} /><br />
                 Email: <input type='text' defaultValue={userData.email} onChange={e=>handleEmailChange(e)} />
-                <button onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>Other Data</button>
+                <button style={{
+                    borderRadius: "0px",
+                    backgroundColor: "gray",
+                    padding: '5px 7px',
+                    margin: '3px',
+                    marginRight: '30px'
+                }} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>Other Data</button>
                 {showOtherData && <OtherDataComp userData={userData} />} 
-                <button onClick={updateData}>Update</button>
-                <button onClick={deleteUser}>Delete</button>
+                <Button
+                    type="button"
+                    title="Update"
+                    onClick={updateData}
+                />
+                <Button
+                    type="button"
+                    title="Delete"
+                    onClick={deleteUser}
+                />
+
            
         </div>
         

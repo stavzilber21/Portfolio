@@ -1,6 +1,6 @@
 import { useState ,useEffect} from 'react'
 import TodoComp from "./Todo";
-
+import Button from "../UI/Button";
 
 export const TodosComp = ({ todos,todosLen, userId, onMarkComplete,onAddTodo}) => {
    const [addTodo, setAddTodo] = useState(false)
@@ -38,10 +38,14 @@ export const TodosComp = ({ todos,todosLen, userId, onMarkComplete,onAddTodo}) =
     <>
     <div style={{ display: "flex", justifyContent: "space-between" }}>
       <p>Todos - User {userId}</p>
-      <button onClick={addTodoHandler}>Add</button>
+      <Button
+          type="button"
+          title="Add"
+          onClick={addTodoHandler}
+      />
     </div>
 
-      <div style={{border : "2px solid black"}}>
+      <div style={!addTodo ? {border: "2px solid black", overflowY: "scroll", maxHeight: "250px"} : {border: "2px solid black", padding: "10px"}}>
         
         {!addTodo &&
           todos.map((todo) =>
@@ -54,7 +58,15 @@ export const TodosComp = ({ todos,todosLen, userId, onMarkComplete,onAddTodo}) =
          addTodo && 
          <form onSubmit={submitHandler}>
             Title: <input type='text' onChange={(e)=>setTitle(e.target.value)}/><br/>
-            <button onClick={() => setAddTodo(false)}>Cancel</button><button type='submit'>Add</button>
+            <Button
+                type="button"
+                title="Cancel"
+                onClick={() => setAddTodo(false)}
+            />
+            <Button
+                type="submit"
+                title="Add"
+            />
          </form> 
         }
         </div>

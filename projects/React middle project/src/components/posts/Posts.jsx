@@ -1,5 +1,5 @@
 import { useState ,useEffect} from 'react'
-
+import Button from "../UI/Button";
 import PostComp from "./Post";
 
 
@@ -38,10 +38,14 @@ export const PostsComp = ({ posts,postsLen, userId,onAddPost}) => {
     <>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <p>Posts - User {userId}</p>
-        <button onClick={addPostHandler}>Add</button>
+        <Button
+          type="button"
+          title="Add"
+          onClick={addPostHandler}
+      />
       </div>
 
-      <div style={{border : "2px solid black"}}>
+      <div style={!addPost ? {border: "2px solid black", overflowY: "scroll", maxHeight: "250px"} : {border: "2px solid black", padding: "10px"}}>
         
         { !addPost &&
           posts.map((post) =>
@@ -54,7 +58,15 @@ export const PostsComp = ({ posts,postsLen, userId,onAddPost}) => {
            <form onSubmit={submitHandler}>
            Title: <input type='text' onChange={(e)=>setPost({ ...post, title: e.target.value })}/><br/>
            Body: <input type='text' onChange={(e)=>setPost({ ...post, body: e.target.value })}/><br/>
-           <button onClick={() => setAddPost(false)}>Cancel</button><button type='submit'>Add</button>
+           <Button
+                type="button"
+                title="Cancel"
+                onClick={() => setAddPost(false)}
+            />
+            <Button
+                type="submit"
+                title="Add"
+            />
         </form> 
         }
         </div>
