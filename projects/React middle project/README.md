@@ -73,3 +73,6 @@ The application manages a client-side database initialized with server data obta
 ## Credits
 
 This project was created as part of a React application development assignment.
+
+![image](https://github.com/stavzilber21/YanivAradCourse/assets/93096648/d9374bba-67a1-46db-9f24-932087556a9b)
+
