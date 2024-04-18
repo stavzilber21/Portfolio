@@ -11,6 +11,13 @@ import { productsActions } from './redux/productsSlice';
 import { ordersActions } from './redux/ordersSlice';
 import User from './pages/userPage';
 import Admin from './pages/adminPage';
+import Products from './components/products';
+import Categories from './components/categories';
+import Customers from './components/customers';
+import Statistics from './components/statistics';
+
+
+
 
 function App() {
   const dispatch = useDispatch();
@@ -52,7 +59,10 @@ function App() {
         
         {/* Dynamic Routing - Admin */}
         <Route path='/admin' element={<Admin />} >
-          <Route  path='products' element={<Login />} />
+          <Route  path='categories' element={<Categories />} />
+          <Route  path='products' element={<Products />} />
+          <Route  path='customers' element={<Customers />} />
+          <Route  path='statistics' element={<Statistics />} />
         </Route>
 
         {/* Dynamic Routing - User */}
