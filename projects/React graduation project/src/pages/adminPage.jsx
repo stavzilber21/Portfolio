@@ -1,8 +1,12 @@
-import React from 'react'
+import React from 'react';
 
 export const Admin = () => {
+  const username = sessionStorage.getItem("username");
   return (
-    <div>adminPage</div>
-  )
-}
-export default Admin
+    <div>
+      <h2>Hello {username}</h2>
+    </div>
+  );
+};
+
+export default Admin;

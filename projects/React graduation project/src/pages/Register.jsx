@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { registerUser } from '../firebase/usersFunction';
+import { add } from '../firebase/firebaseFunctions';
 import { useNavigate } from 'react-router-dom';
 useNavigate
 
@@ -28,7 +28,8 @@ export const Register = () => {
       const handleSubmit = (e) => { 
         e.preventDefault(); 
         const newUser = { firstName: firstName, lastName:lastName,username:username, password:password, allowOrders:checked, role: "user" }
-        registerUser(newUser); 
+        //Add the user to firebase
+        add("users",newUser); 
         clearForm(); 
         navigate('/user');
       }; 

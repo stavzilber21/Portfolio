@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
 export const Login = () => {
+
+  const users = useSelector((state) => state.users.users);
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+
+    const navigate = useNavigate();
   
     const handleFormSubmit = (e) => {
       e.preventDefault();
@@ -12,8 +18,22 @@ export const Login = () => {
         alert('Please fill in both fields.');
         return;
       }
-  
-      console.log(username,password)
+
+      //check if the user is exist in the firebase
+      const user = users.find((user)=> user.username===username);
+      if(user){
+        if(user.password===password){
+          //check if the user is the admin / user
+          sessionStorage.setItem("username", username);
+          user.role==="admin"? navigate('/admin'): navigate('/user');
+        }
+        else{
+          alert('Incorrect password. try again');
+        }
+      }
+      else{
+          alert('No such username exists');
+      }
     };
 
   return (
