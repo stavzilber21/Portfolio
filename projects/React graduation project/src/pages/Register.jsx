@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { add } from '../firebase/firebaseFunctions';
 import { useNavigate } from 'react-router-dom';
-useNavigate
+
 
 export const Register = () => {
     const [firstName, setFirstName] = useState(""); 
@@ -27,12 +27,24 @@ export const Register = () => {
       
       const handleSubmit = (e) => { 
         e.preventDefault(); 
-        const newUser = { firstName: firstName, lastName:lastName,username:username, password:password, allowOrders:checked, role: "user" }
-        //Add the user to firebase
-        add("users",newUser); 
+        const date = new Date().toLocaleDateString();
+      
+        const newUser = { 
+          firstName: firstName, 
+          lastName: lastName,
+          username: username, 
+          password: password, 
+          allowOrders: checked, 
+          role: "user", 
+          date: date // Assign the formatted date to the 'date' property
+        };
+        
+        // Add the user to firebase
+        add("users", newUser); 
         clearForm(); 
         navigate('/user');
       }; 
+      
   return (
     <div>
          <form onSubmit={handleSubmit}> 

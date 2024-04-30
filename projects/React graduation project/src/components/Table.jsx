@@ -1,8 +1,31 @@
-import React from 'react'
+import React from 'react';
 
-export const Table = ({rows,columns}) => {
+export const Table = ({ titles, data, renderCell }) => {
   return (
-    <div>Table</div>
-  )
-}
-export default Table
+    <div>
+      <table border={1}>
+        <thead>
+          <tr>
+            {titles.map((title, index) => (
+              <th key={index}>{title}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((obj, index) => (
+            <tr key={index}>
+              {titles.map((title, i) => (
+                <td key={i}>
+                  {/* Check if renderCell is provided and call it to render cell content */}
+                  {renderCell ? renderCell(obj, title) : obj[title]}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+export default Table;
