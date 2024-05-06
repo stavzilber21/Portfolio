@@ -1,9 +1,40 @@
-import React from 'react'
+import React, { useState } from 'react';
+import Navbar from '../components/Navbar';
+import ListProducts from '../components/users/listProducts';
+import MyAccount from '../components/users/myAccount';
+import MyOrders from '../components/users/myOrders';
+import LogOut from '../components/users/LogOut';
 
 export const User = () => {
-  const username = sessionStorage.getItem("username");
+  const userString = sessionStorage.getItem("data");
+  const user = JSON.parse(userString);
+  const username = user.username;
+  const [selectedComponent, setSelectedComponent] = useState("Products");
+
+  const renderComponent = () => {
+    switch (selectedComponent) {
+      case "Products":
+        return <ListProducts/>;
+      case "My Orders":
+        return <MyOrders/>
+      case "My Account":
+        return <MyAccount/>;
+      case "Log Out":
+        return <LogOut/>
+      default:
+        return null;
+    }
+  };
   return (
-    <div>userPage</div>
+    <div>
+       <h2>Hello {username}</h2>
+      <Navbar
+        data={["Products", "My Orders", "My Account", "Log Out"]}
+        onSelect={setSelectedComponent}
+        defaultSelected={selectedComponent}
+      />
+      {renderComponent()}
+    </div>
   )
 }
 export default User

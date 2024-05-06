@@ -11,10 +11,14 @@ import { productsActions } from './redux/productsSlice';
 import { ordersActions } from './redux/ordersSlice';
 import User from './pages/userPage';
 import Admin from './pages/adminPage';
-import Products from './components/products';
-import Categories from './components/categories';
-import Customers from './components/customers';
-import Statistics from './components/statistics';
+import Products from './components/admin/products';
+import Categories from './components/admin/categories';
+import Customers from './components/admin/customers';
+import Statistics from './components/admin/statistics';
+import ListProducts from './components/users/listProducts';
+import MyOrders from './components/users/myOrders';
+import MyAccount from './components/users/myAccount';
+import LogOut from './components/users/LogOut';
 
 
 
@@ -67,7 +71,10 @@ function App() {
 
         {/* Dynamic Routing - User */}
         <Route path='/user' element={<User />} >
-          <Route  path='products' element={<Login />} />
+          <Route  path='products' element={<ListProducts />} />
+          <Route  path='my orders' element={<MyOrders />} />
+          <Route  path='my account' element={<MyAccount />} />
+          <Route  path='log out' element={<LogOut />} />
         </Route>
       </Routes>
     </>

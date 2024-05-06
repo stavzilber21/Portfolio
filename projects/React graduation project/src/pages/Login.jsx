@@ -24,7 +24,7 @@ export const Login = () => {
       if(user){
         if(user.password===password){
           //check if the user is the admin / user
-          sessionStorage.setItem("username", username);
+          sessionStorage.setItem("data", JSON.stringify(user));
           user.role==="admin"? navigate('/admin'): navigate('/user');
         }
         else{

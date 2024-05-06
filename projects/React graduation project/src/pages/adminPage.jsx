@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
-import Categories from '../components/categories';
-import Products from '../components/products';
-import Customers from '../components/customers';
-import Statistics from '../components/statistics';
+import Categories from '../components/admin/categories';
+import Products from '../components/admin/products';
+import Customers from '../components/admin/customers';
+import Statistics from '../components/admin/statistics';
 
 export const Admin = () => {
-  const username = sessionStorage.getItem("username");
+  const userString = sessionStorage.getItem("data");
+  const user = JSON.parse(userString);
+  const username = user.username;
   const [selectedComponent, setSelectedComponent] = useState("Categories");
 
   const renderComponent = () => {
