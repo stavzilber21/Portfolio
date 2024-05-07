@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import {useDispatch, useSelector } from 'react-redux';
+import { cartsActions } from '../../redux/cartsSlice';
 
 export const PurProducts = ({product}) => {
+    const dispatch = useDispatch();
     const users = useSelector((state) => state.users.users);
     const orders = useSelector((state) => state.orders.orders);
+    // const carts = useSelector((state) => state.carts.carts);
     const [bought, setBought] = useState([]);
     const [number, setNumber] = useState(0);
     useEffect(() => {
@@ -23,6 +26,36 @@ export const PurProducts = ({product}) => {
     setBought(boughtQuantity);
        
       }, [orders,users,product]);
+
+    //When press +
+    const addToCart =()=>{
+        if(number < product.inStock){
+            setNumber(number + 1);
+            dispatch(cartsActions.increase(
+                {'id':product.id, 'title': product.title, 'price': product.price} 
+             ))
+        }
+        else{
+            setNumber(product.inStock)
+        }
+        
+    }
+    
+    //When press -
+    const subToCart =()=>{
+        if(number > 0){
+            setNumber(number - 1); 
+            dispatch(cartsActions.decrease(
+                {'id':product.id, 'title': product.title, 'price': product.price} 
+            ))
+        }
+        else{
+            setNumber(0);
+        }
+        
+    }
+      
+
   return (
     <div style={{ display: "flex", border: "pink 2px solid" }}>
         <div>
@@ -30,9 +63,9 @@ export const PurProducts = ({product}) => {
             {product.description}<br/>
             Price: {product.price}<br/>
             In Stock: {product.inStock}<br/>
-            <button onClick={() => number>0 ? setNumber(number - 1): 0}>-</button>
+            <button onClick={subToCart}>-</button>
             <div>{number}</div>
-            <button onClick={() => number<product.inStock ? setNumber(number + 1):product.inStock}>+</button>
+            <button onClick={addToCart}>+</button>
         </div>
         <div>
             <img width={'100px'} height={'100px'} src={product.image}></img>
