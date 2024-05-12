@@ -1,67 +1,85 @@
 import React, { useState } from 'react';
-import { Link,useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { Button, TextField, Typography, Container, Grid } from '@mui/material';
 
 export const Login = () => {
-
   const users = useSelector((state) => state.users.users);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
 
-    const navigate = useNavigate();
-  
-    const handleFormSubmit = (e) => {
-      e.preventDefault();
-      
-      if (!username || !password) {
-        alert('Please fill in both fields.');
-        return;
-      }
+    if (!username || !password) {
+      alert('Please fill in both fields.');
+      return;
+    }
 
-      //check if the user is exist in the firebase
-      const user = users.find((user)=> user.username===username);
-      if(user){
-        if(user.password===password){
-          //check if the user is the admin / user
-          sessionStorage.setItem("data", JSON.stringify(user));
-          user.role==="admin"? navigate('/admin'): navigate('/user');
-        }
-        else{
-          alert('Incorrect password. try again');
-        }
+    // Check if the user exists in the firebase
+    const user = users.find((user) => user.username === username);
+    if (user) {
+      if (user.password === password) {
+        // Check if the user is the admin / user
+        sessionStorage.setItem('data', JSON.stringify(user));
+        user.role === 'admin' ? navigate('/admin') : navigate('/user');
+      } else {
+        alert('Incorrect password. Please try again');
       }
-      else{
-          alert('No such username exists');
-      }
-    };
+    } else {
+      alert('No such username exists');
+    }
+  };
 
   return (
-    <div>
-        <form onSubmit={handleFormSubmit}>
-            <h2>Next Generation E-Commerce</h2>
-            <div>
-            <label htmlFor="username">Username:</label><br />
-            <input
-                type="text"
-                id="username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-            />
-            </div>
-            <div>
-            <label htmlFor="password">Password:</label><br />
-            <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
-            </div>
-            <button type="submit">Login</button><br />
-            New user? <Link to='/register'>Register Page</Link>
-        </form>
-    </div>
-  )
-}
-export default Login
+    <Container maxWidth="sm">
+      <Grid container spacing={2} justifyContent="center">
+        <Grid item xs={12}>
+          <Typography variant="h4" align="center">
+            Next Generation E-Commerce
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <form onSubmit={handleFormSubmit}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  id="username"
+                  label="Username"
+                  variant="outlined"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  id="password"
+                  label="Password"
+                  type="password"
+                  variant="outlined"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Button type="submit" fullWidth variant="contained" color="primary">
+                  Login
+                </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography align="center">
+                  New user? <Link to="/register">Register Page</Link>
+                </Typography>
+              </Grid>
+            </Grid>
+          </form>
+        </Grid>
+      </Grid>
+    </Container>
+  );
+};
+
+export default Login;

@@ -14,7 +14,7 @@ export const MyOrders = () => {
         order.products.map((product) => ({
           Title: product.name,
           Qty: product.qty,
-          Total: product.price,
+          Total: product.price*product.qty,
           Date: order.date
         }))
    );

@@ -22,6 +22,8 @@ const initialState = {
           }
           state.totalPrice += action.payload.price;
         },
+
+
         decrease(state, action) {
           const index = state.products.findIndex((p) => p.id === action.payload.id);
           if (state.products[index].qty === 1) {
@@ -30,6 +32,18 @@ const initialState = {
             state.products[index].qty -= 1;
           }
           state.totalPrice -= action.payload.price;
+        },
+
+
+        clearCart(state, action){
+          state.products = [];
+          state.totalPrice = 0;
+        },
+
+        removeProduct(state, action){
+          const index = state.products.findIndex((p) => p.id === action.payload.id);
+          state.products.splice(index, 1);
+          state.totalPrice -= (action.payload.price*action.payload.qty);
         }
     }
   })

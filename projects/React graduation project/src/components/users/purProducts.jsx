@@ -6,9 +6,8 @@ export const PurProducts = ({product}) => {
     const dispatch = useDispatch();
     const users = useSelector((state) => state.users.users);
     const orders = useSelector((state) => state.orders.orders);
-    // const carts = useSelector((state) => state.carts.carts);
+    const cartsProducts = useSelector((state) => state.carts.products);
     const [bought, setBought] = useState([]);
-    const [number, setNumber] = useState(0);
     useEffect(() => {
         const usersFilter = users.filter((user)=>user.allowOrders===true).map((user)=>user.id);
         const userOrders = orders.filter((order) =>usersFilter.includes(order.userId));
@@ -27,35 +26,35 @@ export const PurProducts = ({product}) => {
        
       }, [orders,users,product]);
 
+    
+
     //When press +
     const addToCart =()=>{
-        if(number < product.inStock){
-            setNumber(number + 1);
+        if(qty < product.inStock){
             dispatch(cartsActions.increase(
                 {'id':product.id, 'title': product.title, 'price': product.price} 
              ))
-        }
-        else{
-            setNumber(product.inStock)
-        }
-        
+        }    
     }
     
     //When press -
     const subToCart =()=>{
-        if(number > 0){
-            setNumber(number - 1); 
+        if(qty > 0){
             dispatch(cartsActions.decrease(
                 {'id':product.id, 'title': product.title, 'price': product.price} 
             ))
         }
         else{
-            setNumber(0);
-        }
-        
+            return;
+        }     
     }
-      
 
+    let qty = 0;
+    const idx = cartsProducts.findIndex((p) => p.id === product.id);
+    if (idx !== -1) {
+      qty = cartsProducts[idx].qty;
+    }
+    
   return (
     <div style={{ display: "flex", border: "pink 2px solid" }}>
         <div>
@@ -64,7 +63,7 @@ export const PurProducts = ({product}) => {
             Price: {product.price}<br/>
             In Stock: {product.inStock}<br/>
             <button onClick={subToCart}>-</button>
-            <div>{number}</div>
+            <div>{qty}</div>
             <button onClick={addToCart}>+</button>
         </div>
         <div>
