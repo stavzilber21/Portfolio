@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Table from '../Table';
 import { useSelector } from 'react-redux';
+import { Container, Typography, TextField, Button, Grid } from '@mui/material';
 
 export const Customers = () => {
   const users = useSelector((state) => state.users.users);
@@ -30,24 +31,33 @@ export const Customers = () => {
   }, [users, orders]);
 
   return (
-    <div>
-      <h1>Customers</h1>
-      <Table
-        titles={['Full Name', 'Joined At', 'Products Bought']}
-        data={usersTable}
-        renderCell={(rowData, title) => {
-          if (title === 'Products Bought') {
-            return (
-              <Table
-                titles={['Product', 'Qty', 'Date']}
-                data={rowData['Products Bought']}
-              />
-            );
-          }
-          return rowData[title];
-        }}
-      />
-    </div>
+    <Container maxWidth="sm">
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography variant="h4" align="center" style={{ color: '#87cefa', fontFamily: 'cursive', fontWeight: 'bold', margin: '10px' }}>
+            Customers
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Table
+            titles={['Full Name', 'Joined At', 'Products Bought']}
+            data={usersTable}
+            renderCell={(rowData, title) => {
+              if (title === 'Products Bought') {
+                return (
+                  <Table
+                    titles={['Product', 'Qty', 'Date']}
+                    data={rowData['Products Bought']}
+                  />
+                );
+              }
+              return rowData[title];
+            }}
+          />
+          </Grid>
+        
+      </Grid>
+    </Container>
   );
 };
 

@@ -1,31 +1,32 @@
 import React from 'react';
+import { TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper } from '@mui/material';
 
-export const Table = ({ titles, data, renderCell }) => {
+const CustomTable = ({ titles, data, renderCell }) => {
   return (
-    <div>
-      <table border={1}>
-        <thead>
-          <tr>
+    <TableContainer component={Paper}>
+      <Table border={3} size="small" style={{ fontSize: '14px' }}>
+        <TableHead>
+          <TableRow >
             {titles.map((title, index) => (
-              <th key={index}>{title}</th>
+              <TableCell style={{ color: '#90ee90', fontWeight: 'bold', fontSize: '16px' }} key={index}>{title}</TableCell>
             ))}
-          </tr>
-        </thead>
-        <tbody>
+          </TableRow>
+        </TableHead>
+        <TableBody>
           {data.map((obj, index) => (
-            <tr key={index}>
+            <TableRow key={index}>
               {titles.map((title, i) => (
-                <td key={i}>
+                <TableCell key={i}>
                   {/* Check if renderCell is provided and call it to render cell content */}
                   {renderCell ? renderCell(obj, title) : obj[title]}
-                </td>
+                </TableCell>
               ))}
-            </tr>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
-    </div>
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 
-export default Table;
+export default CustomTable;
