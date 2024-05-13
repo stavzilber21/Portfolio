@@ -36,7 +36,7 @@ export const Login = () => {
     <Container maxWidth="sm">
       <Grid container spacing={2} justifyContent="center">
         <Grid item xs={12}>
-          <Typography variant="h4" align="center">
+          <Typography variant="h4" align="center"  style={{ color: '#2196f3', fontFamily: 'cursive', fontWeight: 'bold' }}>
             Next Generation E-Commerce
           </Typography>
         </Grid>

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { add } from '../firebase/firebaseFunctions';
 import { useNavigate } from 'react-router-dom';
+import { Button, TextField, Typography,Checkbox, Container, Grid} from '@mui/material';
+
 
 
 export const Register = () => {
@@ -46,56 +48,77 @@ export const Register = () => {
       }; 
       
   return (
-    <div>
-         <form onSubmit={handleSubmit}> 
-         <h2>New User Registeration</h2> 
-         <div className="Field"> 
-           <label>First name:</label> <br/>
-           <input 
-             value={firstName} 
-             onChange={(e) => { 
-               setFirstName(e.target.value); 
-             }} 
-           /> 
-         </div> 
-         <div className="Field"> 
-           <label>Last name:</label> <br/>
-           <input 
-             value={lastName} 
-             onChange={(e) => { 
-               setLastName(e.target.value); 
-             }} 
-           /> 
-         </div> 
-         <div className="Field"> 
-           <label>User Name:</label> <br/>
-           <input 
-             value={username} 
-             onChange={(e) => { 
-                setUserName(e.target.value); 
-             }} 
-           /> 
-         </div> 
-         <div className="Field"> 
-           <label>Password:</label> <br/>
-           <input 
-             value={password} 
-             type="password" 
-             onChange={(e) => { 
-               setPassword(e.target.value ); 
-             }} 
-           /> 
+  <Container maxWidth="sm">
+    <Grid container spacing={2} justifyContent="center">
+        <Grid item xs={12}>
+          <Typography variant="h4" align="center" style={{ color: '#2196f3', fontFamily: 'cursive', fontWeight: 'bold' }}>
+            New User Registration
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    id="firstName"
+                    fullWidth
+                    label="First Name"
+                    value={firstName} 
+                    variant="outlined"
+                    onChange={(e) => { setFirstName(e.target.value); }} 
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    id="lastName"
+                    fullWidth
+                    label="Last name"
+                    value={lastName} 
+                    variant="outlined"
+                    onChange={(e) => { setLastName(e.target.value); }} 
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    id="username"
+                    fullWidth
+                    label="User Name"
+                    value={username} 
+                    variant="outlined"
+                    onChange={(e) => { setUserName(e.target.value); }} 
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    id="password"
+                    fullWidth
+                    label="Password"
+                    type="password"
+                    value={password} 
+                    variant="outlined"
+                    onChange={(e) => { setPassword(e.target.value); }} 
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Checkbox
+                    checked={checked}
+                    onChange={handleChange}
+                    inputProps={{ 'aria-label': 'allow others to see my orders' }}
+                  />
+                  <Typography variant="body1">Allow others to see my orders</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Button type="submit" fullWidth variant="contained" color="primary">
+                  Create
+                  </Button>
+                </Grid>
+              </Grid> 
 
-         </div> 
-         <div className="Field"> 
-            <input value = {checked} type = "checkbox" onChange = {handleChange} />
-            <span>Allow others to see my orders</span>
-         </div> 
-         <button type="submit">Create
-         </button> 
-        
-     </form> 
-    </div>
+
+          </form> 
+        </Grid>
+    </Grid>
+  </Container>
   )
 }
 export default Register
