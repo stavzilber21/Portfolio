@@ -2,6 +2,7 @@ import React, {useState ,useEffect} from 'react';
 import { useSelector } from 'react-redux';
 import { update } from '../../firebase/firebaseFunctions';
 import Table from '../Table';
+import { TextField, Button, Select, MenuItem, FormControl, InputLabel, Typography, TextareaAutosize, Container, Grid, Box } from '@mui/material';
 
 export const ProductItem = ({product}) => {
     const users = useSelector((state) => state.users.users);
@@ -54,31 +55,39 @@ export const ProductItem = ({product}) => {
     
 
   return (
-    <div style={{ display: "flex", border: "red 2px solid" }}>
-        <div>
-            Title: <input type='text' name='title' defaultValue={product.title} onChange={e => handleChange(e)}></input><br />
-            Category: 
-            <select name='category' value={product.category} onChange={e => handleChange(e)}>
-                <option value=''>Select category...</option>
-                {categories.map((category, index) => (
-                    <option key={index} value={category.name}>{category.name}</option>
-                ))}
-            </select><br />
-            Description:<br />
-            <textarea type='text' name='description' defaultValue={product.description} onChange={e => handleChange(e)}></textarea><br />
-            In Stock: <input type='number' name='inStock' defaultValue={product.inStock} onChange={e => handleChange(e)}></input><br />
-            <button onClick={handleUpdateProduct}>Save</button>
-        </div>
-        <div>
-            Price: <input type='number' name='price' defaultValue={product.price} onChange={e => handleChange(e)}></input><br />
-            Link to pice: <input type='text' name='image' defaultValue={product.image} onChange={e => handleChange(e)}></input><br />
-            Bought By: <br />
-            <Table
-                titles={['name', 'qty', 'date']}
-                data={tableProducts}
-            />
-        </div>
-    </div>
+    <Box p={3} m={3} border={1} borderRadius={4} maxWidth="md">
+  <Grid container alignItems="center" spacing={3}>
+    <Grid item xs={12} sm={6}>
+      <div style={{ paddingRight: '20px' }}>
+        <TextField label="Title" name="title" defaultValue={product.title} onChange={e => handleChange(e)} /> <br/><br/>
+        <FormControl >
+          <InputLabel>Category</InputLabel>
+          <Select name="category" value={product.category} onChange={e => handleChange(e)}>
+            {categories.map((category, index) => (
+              <MenuItem key={index} value={category.name}>{category.name}</MenuItem>
+            ))}
+          </Select>
+        </FormControl> <br/><br/>
+        <Typography>Description:</Typography>
+        <TextareaAutosize name="description" defaultValue={product.description} aria-label="Description" onChange={e => handleChange(e) }/><br/><br/>
+        <TextField label="In Stock" type="number" name="inStock" defaultValue={product.inStock} onChange={e => handleChange(e)}/><br/><br/>
+        <Button variant="contained" color="primary" onClick={handleUpdateProduct}>Save</Button>
+      </div>
+    </Grid>
+    <Grid item xs={12} sm={6}>
+      <div style={{ paddingLeft: '20px' }}>
+        <TextField label="Price" type="number" name="price" defaultValue={product.price} onChange={e => handleChange(e)}/><br/>
+        <TextField label="Link to pic" name="image" defaultValue={product.image} onChange={e => handleChange(e)} margin="normal" /><br/>
+        <Typography>Bought By:</Typography>
+        <Table
+          titles={['name', 'qty', 'date']}
+          data={tableProducts}
+        />
+      </div>
+    </Grid>
+  </Grid>
+</Box>
+
   )
 }
 export default ProductItem

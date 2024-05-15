@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Button, TextField, Typography, Container, Grid } from '@mui/material';
+import { Button, TextField, Typography, Container, Grid, Box } from '@mui/material';
+import MyTypography from '../components/Typography';
 
 export const Login = () => {
   const users = useSelector((state) => state.users.users);
@@ -33,52 +34,60 @@ export const Login = () => {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Grid container spacing={2} justifyContent="center">
-        <Grid item xs={12}>
-          <Typography variant="h4" align="center"  style={{ color: '#2196f3', fontFamily: 'cursive', fontWeight: 'bold' }}>
-            Next Generation E-Commerce
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <form onSubmit={handleFormSubmit}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  id="username"
-                  label="Username"
-                  variant="outlined"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  id="password"
-                  label="Password"
-                  type="password"
-                  variant="outlined"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Button type="submit" fullWidth variant="contained" color="primary">
-                  Login
-                </Button>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography align="center">
-                  New user? <Link to="/register">Register Page</Link>
-                </Typography>
-              </Grid>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="100vh"
+      bgcolor="#f5f5f5"
+    >
+      <Container maxWidth="sm">
+        <Box p={3} bgcolor="#fff" borderRadius={4}>
+          <Grid container spacing={2} justifyContent="center">
+            <Grid item xs={12}>
+              <MyTypography title={"Next Generation E-Commerce"}/>
             </Grid>
-          </form>
-        </Grid>
-      </Grid>
-    </Container>
+            <Grid item xs={12}>
+              <form onSubmit={handleFormSubmit}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      id="username"
+                      label="Username"
+                      variant="outlined"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      id="password"
+                      label="Password"
+                      type="password"
+                      variant="outlined"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button type="submit" fullWidth variant="contained" color="primary">
+                      Login
+                    </Button>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography align="center">
+                      New user? <Link to="/register">Register Page</Link>
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </form>
+            </Grid>
+          </Grid>
+        </Box>
+      </Container>
+    </Box>
   );
 };
 

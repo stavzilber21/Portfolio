@@ -9,6 +9,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { Typography,Grid,Container } from '@mui/material';
+import MyTypography from '../Typography';
 
 export const Statistics = () => {
   const users = useSelector((state) => state.users.users);
@@ -83,19 +85,24 @@ export const Statistics = () => {
   };
 
   return (
-    <div>
-      <div>
-        <Chart
+    <Container maxWidth="sm">
+      <Grid container spacing={2}>
+      <Grid item xs={12}>
+      <Chart
           chartType="PieChart"
           data={dataProducts}
           options={options}
           width={"100%"}
           height={"400px"}
+          m = {5}
         />
-      </div>
-      <div>
-        <h3>Products Quantity Per Customer</h3>
-        Sort By Customer: <br /><br />
+      </Grid>
+
+      
+      <Grid item xs={12}>
+        <MyTypography title={'Products Quantity Per Customer'}/>
+        <Typography>Sort By Customer:</Typography>
+        
         <select onChange={e => chooseUser(e.target.value)}>
           <option value=''>Select Customer...</option>
           {users.filter(user => user.role !== 'admin').map((user) => (
@@ -115,8 +122,9 @@ export const Statistics = () => {
             <YAxis label={{ value: 'Qty', angle: -90, position: 'insideLeft', interval: 2 }} />
           </BarChart>
         }
-      </div>
-    </div>
+      </Grid>
+      </Grid>
+    </Container>
   )
 }
 export default Statistics;
