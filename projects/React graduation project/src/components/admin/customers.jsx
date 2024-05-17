@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Table from '../Table';
 import { useSelector } from 'react-redux';
-import { Container, Typography, TextField, Button, Grid } from '@mui/material';
+import { Container, Typography, Grid } from '@mui/material';
 
 export const Customers = () => {
   const users = useSelector((state) => state.users.users);
@@ -31,7 +31,7 @@ export const Customers = () => {
   }, [users, orders]);
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="lg">
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h4" align="center" style={{ color: '#87cefa', fontFamily: 'cursive', fontWeight: 'bold', margin: '10px' }}>

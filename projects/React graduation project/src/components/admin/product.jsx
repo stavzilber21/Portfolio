@@ -2,7 +2,7 @@ import React, {useState ,useEffect} from 'react';
 import { useSelector } from 'react-redux';
 import { update } from '../../firebase/firebaseFunctions';
 import Table from '../Table';
-import { TextField, Button, Select, MenuItem, FormControl, InputLabel, Typography, TextareaAutosize, Container, Grid, Box } from '@mui/material';
+import { TextField, Button, Select, MenuItem, FormControl, InputLabel, Typography, TextareaAutosize, Container, Grid, Box,Card } from '@mui/material';
 
 export const ProductItem = ({product}) => {
     const users = useSelector((state) => state.users.users);

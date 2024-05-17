@@ -4,7 +4,8 @@ import ListProducts from '../components/users/listProducts';
 import MyAccount from '../components/users/myAccount';
 import MyOrders from '../components/users/myOrders';
 import LogOut from '../components/users/LogOut';
-import {Typography} from '@mui/material';
+import '../UI/Style.css'; 
+import MyTypography from '../components/Typography';
 
 
 export const User = () => {
@@ -29,9 +30,7 @@ export const User = () => {
   };
   return (
     <div>
-      <Typography variant="h4" align="center"  style={{ color: '#2196f3', fontFamily: 'cursive', fontWeight: 'bold' ,margin: '10px'}}>
-        Hello {username}
-      </Typography>
+      {/* <MyTypography title={"Hello "+username}/> */}
       <Navbar
         data={["Products", "My Orders", "My Account", "Log Out"]}
         onSelect={setSelectedComponent}

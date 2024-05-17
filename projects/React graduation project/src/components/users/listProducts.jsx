@@ -7,8 +7,9 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import { BsArrowLeftShort } from 'react-icons/bs';
 import Cart from './Cart';
+import { Typography,IconButton ,Container, Grid } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export const ListProducts = () => {
   const products = useSelector((state) => state.products.products);
@@ -31,20 +32,24 @@ export const ListProducts = () => {
   };
 
   return (
-    <div style={{ display: "flex"}}>
-      <div>
-        {open &&
-        <>
-          <Cart/>
-          
-          </>
-        }
-      <BsArrowLeftShort onClick={()=>setOpen(!open)}></BsArrowLeftShort>
-      </div>
-      <div>
-          <Box sx={{ p: 2, border: '1px solid #ccc', borderRadius: 8 }}>
-          <Box sx={{ mb: 2 }}>
-            <strong>Filter By: </strong>
+    
+    <Container maxWidth="lg">
+    <Grid container spacing={2} style={{ display: "flex" }}>
+      {/* Cart Section */}
+      <Grid item xs={12} md={open ? 3 : 0}>
+          {open &&
+            <>
+              <Cart />
+            </>
+          }
+          <IconButton onClick={() => setOpen(!open)}>
+            <ArrowBackIcon />
+          </IconButton>
+        </Grid>
+        {/* Products Section */}
+        <Grid item xs={12} md={open ? 9 : 12}>
+          <Box sx={{ p: 2,m: 5, border: '2px solid #ccc', borderRadius: 5 , bgcolor: '#f0ffff'}}>
+            <Typography>Filter By: </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Select
                 value={category}
@@ -61,7 +66,7 @@ export const ListProducts = () => {
                 ))}
               </Select>
               <Box sx={{ width: '200px' }}>
-                Price:
+                <Typography>Price:</Typography>
                 <Slider
                   aria-label="Price"
                   valueLabelDisplay="auto"
@@ -82,14 +87,15 @@ export const ListProducts = () => {
               <Button variant='contained' onClick={clearFilter}>Clear</Button>
             </Box>
           </Box>
-          <Box>
+          <Box sx={{ p: 2,m: 5, border: '2px solid #ccc', borderRadius: 5, bgcolor: '#f0ffff'}}>
             {filterData.map(pro => (
               <PurProducts key={pro.id} product={pro} />
             ))}
           </Box>
-        </Box>
-      </div>
-    </div>
+        
+          </Grid>
+      </Grid>
+    </Container>
     
   );
 };

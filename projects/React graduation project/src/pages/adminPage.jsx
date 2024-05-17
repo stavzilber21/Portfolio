@@ -4,7 +4,9 @@ import Categories from '../components/admin/categories';
 import Products from '../components/admin/products';
 import Customers from '../components/admin/customers';
 import Statistics from '../components/admin/statistics';
-import {Typography} from '@mui/material';
+import MyTypography from '../components/Typography';
+import '../UI/Style.css'; 
+
 
 export const Admin = () => {
   const userString = sessionStorage.getItem("data");
@@ -29,10 +31,7 @@ export const Admin = () => {
 
   return (
     <div>
-      <Typography variant="h4" align="center"  style={{ color: '#2196f3', fontFamily: 'cursive', fontWeight: 'bold'  ,margin: '10px'}}>
-        Hello {username}
-          </Typography>
-
+      {/* <MyTypography title={"Hello "+username}/> */}
       <Navbar
         data={["Categories", "Products", "Customers", "Statistics"]}
         onSelect={setSelectedComponent}

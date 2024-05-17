@@ -1,9 +1,12 @@
-import { Box } from '@mui/material';
 import React from 'react'
 import {useDispatch, useSelector } from 'react-redux';
 import CartItem from './CartItem';
 import { add, update } from '../../firebase/firebaseFunctions';
 import { cartsActions } from '../../redux/cartsSlice';
+import '../../UI/Style.css'; 
+import MyTypography from '../Typography';
+import { Grid, Button, Card, CardContent } from '@mui/material';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 
 export const Cart = () => {
@@ -33,22 +36,33 @@ export const Cart = () => {
     
 
   return (
-    <div>
-        <h1>Cart</h1>
-        {
-        carts.products.map((cart)=>(
-          <Box key={cart.id} sx={{ p: 2, border: '1px solid #ccc', borderRadius: 8 }}>
-            <CartItem cart={cart}/>
-          </Box>
-        ))
-      }
-      <br/>
-      <br/>
-      <strong>Total: {carts.totalPrice}</strong>
-      <br/>
-      <br/>
-      <button onClick={makeOrder}>Order</button>
-    </div>
+    <Grid container spacing={2} alignItems="center">
+      {/* Cart Title and Icon */}
+      <Grid item container alignItems="center">
+          <MyTypography title="Cart" />
+          <ShoppingCartIcon style={{ marginLeft: 90 , color: '#afeeee'}} />
+      </Grid>
+
+      {/* Cart Products */}
+      {carts.products.map((cart) => (
+        <Grid item xs={12} key={cart.id}>
+          <Card className="product-card">
+            <CardContent>
+              <CartItem cart={cart} />
+            </CardContent>
+          </Card>
+        </Grid>
+      ))}
+      
+      {/* Total Price */}
+      <Grid item xs={12}>
+        <MyTypography title={"Total: " + carts.totalPrice} />
+      </Grid>
+      {/* Order Button */}
+      <Grid item xs={12}>
+        <Button variant="contained" onClick={makeOrder}>Order</Button>
+      </Grid>
+  </Grid>
   )
 }
 export default Cart

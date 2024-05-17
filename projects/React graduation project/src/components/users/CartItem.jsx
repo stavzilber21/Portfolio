@@ -1,6 +1,10 @@
 import React, { useState,useEffect } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import { cartsActions } from '../../redux/cartsSlice';
+import { Typography, CardActions, IconButton } from '@mui/material';
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export const CartItem = ({cart}) => {
     const dispatch = useDispatch();
@@ -55,8 +59,15 @@ export const CartItem = ({cart}) => {
     
   return (
     <div>
-        {cart.title} - <button onClick={subToCart}>-</button> {cart.qty} <button onClick={addToCart}>+</button> units - Total: {cart.price*cart.qty} <button onClick={removeProductFromTheCart}>X</button>
-    </div>
+    <Typography>{cart.title}</Typography>
+    <CardActions>
+      <IconButton onClick={subToCart}><RemoveIcon /></IconButton>
+      <Typography variant="body1">{cart.qty}</Typography>
+      <IconButton onClick={addToCart}><AddIcon /></IconButton>
+    </CardActions>
+    <Typography>Total: {cart.price * cart.qty}</Typography>
+    <IconButton onClick={removeProductFromTheCart}><DeleteIcon /></IconButton>
+  </div>
   )
 }
 

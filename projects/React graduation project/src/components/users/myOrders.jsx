@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Table from '../Table';
 import { useSelector } from 'react-redux';
+import { Container, Typography, Grid } from '@mui/material';
 
 export const MyOrders = () => {
   const orders = useSelector((state) => state.orders.orders);
@@ -21,13 +22,21 @@ export const MyOrders = () => {
    setUsersTable(productsBought);
   }, [orders]);
   return (
-    <div>
-      <h2>Orders</h2>
+    <Container maxWidth="lg">
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography variant="h4" align="center" style={{ color: '#87cefa', fontFamily: 'cursive', fontWeight: 'bold', margin: '10px' }}>
+            Orders
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
       <Table
           titles={['Title', 'Qty','Total' ,'Date']}
           data={usersTable}
           />
-    </div>
+          </Grid>
+     </Grid>
+    </Container>
   )
 }
 export default MyOrders

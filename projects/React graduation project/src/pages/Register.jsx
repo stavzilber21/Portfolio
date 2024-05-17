@@ -3,6 +3,7 @@ import { add } from '../firebase/firebaseFunctions';
 import { useNavigate } from 'react-router-dom';
 import { Button, TextField, Typography, Checkbox, Container, Grid, Box } from '@mui/material';
 import MyTypography from '../components/Typography';
+import '../UI/Style.css'
 
 export const Register = () => {
   const [firstName, setFirstName] = useState(""); 
@@ -44,13 +45,7 @@ export const Register = () => {
   }; 
 
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      minHeight="100vh"
-      bgcolor="#f5f5f5"
-    >
+    <Box className="box">
       <Container maxWidth="sm">
         <Box p={3} bgcolor="#fff" borderRadius={4}>
           <Grid container spacing={2} justifyContent="center">

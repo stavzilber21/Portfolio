@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Button, TextField, Typography, Container, Grid, Box } from '@mui/material';
 import MyTypography from '../components/Typography';
+import '../UI/Style.css'
 
 export const Login = () => {
   const users = useSelector((state) => state.users.users);
@@ -26,21 +27,15 @@ export const Login = () => {
         sessionStorage.setItem('data', JSON.stringify(user));
         user.role === 'admin' ? navigate('/admin') : navigate('/user');
       } else {
-        alert('Incorrect password. Please try again');
+        alert('Incorrect username or password. Please try again');
       }
     } else {
-      alert('No such username exists');
+      alert('Incorrect username or password. Please try again');
     }
   };
 
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      minHeight="100vh"
-      bgcolor="#f5f5f5"
-    >
+    <Box className="box">
       <Container maxWidth="sm">
         <Box p={3} bgcolor="#fff" borderRadius={4}>
           <Grid container spacing={2} justifyContent="center">

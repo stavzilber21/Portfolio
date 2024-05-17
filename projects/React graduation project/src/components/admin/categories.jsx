@@ -1,46 +1,48 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Container, Typography, TextField, Button, Grid } from '@mui/material';
+import { Container, Typography, Grid ,Fab} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import CategoryItem from './category';
-import { add } from '../../firebase/firebaseFunctions';
+
 
 const Categories = () => {
   const categories = useSelector((state) => state.categories.categories);
-  const [newCategory, setNewCategory] = useState('');
-
-  const addCategory = () => {
-    const newCat = { name: newCategory };
-    add("categories", newCat);
-    setNewCategory('');
-  };
+const [showAddCategory, setShowAddCategory] = useState(false)
+ 
+ 
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="lg">
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography variant="h3" align="center" style={{ color: '#87cefa', fontFamily: 'cursive', fontWeight: 'bold', margin: '10px' }}>
             Categories
           </Typography>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item container xs={12} spacing={0.5}>
           {categories.map((cat) => (
-            <CategoryItem key={cat.id} category={cat} />
+            <Grid item xs={6} key={cat.id}>
+              <CategoryItem category={cat} setShowAddCategory={setShowAddCategory}/>
+            </Grid>
           ))}
+           {showAddCategory && <Grid item xs={6}>
+              <CategoryItem category={{}} setShowAddCategory={setShowAddCategory} />
+            </Grid>}
+           
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="Add new category"
-            variant="outlined"
-            value={newCategory}
-            onChange={(e) => setNewCategory(e.target.value)}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Button variant="contained" color="primary" onClick={addCategory}>
-            Add
-          </Button>
-        </Grid>
+        
+        <Fab
+        color="primary"
+        aria-label="add"
+        style={{
+          position: 'fixed',
+          bottom: '16px',
+          right: '16px',
+        }}
+        onClick={() => setShowAddCategory(true)}
+      >
+        <AddIcon />
+      </Fab>
       </Grid>
     </Container>
   );

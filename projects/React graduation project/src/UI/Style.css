@@ -4,3 +4,42 @@
     font-weight: bold;
 }
   
+.product-card {
+    border-radius: 5px;
+    border: 2px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    margin: 20px;
+}
+
+.category-card {
+    border-radius: 5px;
+    border: 2px solid #ccc;
+    justify-content: space-between;
+    margin: 10px;
+}
+
+.box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.box-filter {
+    padding: 15px;
+    margin: 20px;
+    border: 2px solid #ccc;
+    border-radius: 12px;
+    background-color: #f0ffff;
+  }
+  
+    
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+    overflow-x: hidden;
+  }
+
+  
