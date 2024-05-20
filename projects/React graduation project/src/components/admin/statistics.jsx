@@ -1,18 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Chart } from "react-google-charts";
+import { Link } from 'react-router-dom';
+import { scaleOrdinal } from 'd3-scale';
+import * as d3Chromatic from 'd3-scale-chromatic';
 import {
-  BarChart,
-  Bar,
-  LabelList,
-  Cell,
-  XAxis,
-  YAxis,
+  BarChart, Bar, LabelList, Cell, XAxis, YAxis,
 } from "recharts";
-import { Typography,Grid,Container } from '@mui/material';
+import { Typography, Grid, Container } from '@mui/material';
 import MyTypography from '../Typography';
 
-export const Statistics = () => {
+const Statistics = () => {
   const users = useSelector((state) => state.users.users);
   const orders = useSelector((state) => state.orders.orders);
   const [dataProducts, setDataProducts] = useState([]);
@@ -20,11 +18,8 @@ export const Statistics = () => {
   const [userOrders, setUserOrders] = useState([]);
   const [myUser, setMyUser] = useState('');
 
-  // Define an array of colors
-  const colors = ["#8884d8", "#82ca9d", "#ffc658", "#ff7f0e", "#ff0000"];
-
   const chooseUser = (val) => {
-    setMyUser(val)
+    setMyUser(val);
     setSelectUser(true);
   }
 
@@ -49,7 +44,7 @@ export const Statistics = () => {
 
     setDataProducts(data);
 
-  }, [orders, users]);
+  }, [orders]);
 
   useEffect(() => {
     //-----------------For the second Graph----------
@@ -74,57 +69,57 @@ export const Statistics = () => {
         setUserOrders(data);
       }
     }
-  }, [orders, users, selectUser, myUser]);
+  }, [orders, users, myUser]);
 
   const options = {
-    title: "Total Sold Products",
     tooltip: {
       text: 'value'
     },
-    pieSliceText: 'value'
+    pieSliceText: 'value',
+    backgroundColor: '#f0f0f0'
   };
 
-  return (
-    <Container maxWidth="sm">
-      <Grid container spacing={2}>
-      <Grid item xs={12}>
-      <Chart
-          chartType="PieChart"
-          data={dataProducts}
-          options={options}
-          width={"100%"}
-          height={"400px"}
-          m = {5}
-        />
-      </Grid>
+  const colorScale = scaleOrdinal(d3Chromatic.schemeCategory10);
 
-      
-      <Grid item xs={12}>
-        <MyTypography title={'Products Quantity Per Customer'}/>
-        <Typography>Sort By Customer:</Typography>
-        
-        <select onChange={e => chooseUser(e.target.value)}>
-          <option value=''>Select Customer...</option>
-          {users.filter(user => user.role !== 'admin').map((user) => (
-            <option key={user.id} value={user.firstName + ' ' + user.lastName}>{user.firstName + ' ' + user.lastName}</option>
-          ))}
-        </select><br /><br /><br />
-        {selectUser && userOrders.length > 0 && // Add check for userOrders
-          <BarChart width={400} height={400} data={userOrders} barCategoryGap={10}>
-            <Bar dataKey="qty">
-              {/* Loop through data and assign a different fill color to each bar */}
-              {userOrders.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
-              ))}
-              <LabelList dataKey="qty" position="top" />
-            </Bar>
-            <XAxis dataKey="name" />
-            <YAxis label={{ value: 'Qty', angle: -90, position: 'insideLeft', interval: 2 }} />
-          </BarChart>
-        }
-      </Grid>
+  return (
+    <Container maxWidth="lg">
+      <Grid container spacing={6} display={'flex'} mt={3}>
+        <Grid item xs={6} >
+          <MyTypography title={'Total Sold Products'} />
+          <Chart 
+            chartType="PieChart"
+            data={dataProducts}
+            options={options}
+            width={"100%"}
+            height={"400px"}
+            m={5}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <MyTypography title={'Products Quantity Per Customer'} />
+          <Typography>Sort By Customer:</Typography>
+          <select onChange={e => chooseUser(e.target.value)}>
+            <option value=''>Select Customer...</option>
+            {users.filter(user => user.role !== 'admin').map((user) => (
+              <option key={user.id} value={user.firstName + ' ' + user.lastName}>{user.firstName + ' ' + user.lastName}</option>
+            ))}
+          </select><br /><br /><br />
+          {selectUser && userOrders.length > 0 && (
+            <BarChart width={350} height={350} data={userOrders} barCategoryGap={10}>
+              <Bar dataKey="qty">
+                {userOrders.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={colorScale(index)} />
+                ))}
+                <LabelList dataKey="qty" position="top" />
+              </Bar>
+              <XAxis dataKey="name" />
+              <YAxis label={{ value: 'Qty', angle: -90, position: 'insideLeft', interval: 2 }} />
+            </BarChart>
+          )}
+        </Grid>
       </Grid>
     </Container>
   )
 }
+
 export default Statistics;

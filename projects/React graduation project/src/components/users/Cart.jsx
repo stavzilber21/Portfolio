@@ -39,8 +39,8 @@ export const Cart = () => {
     <Grid container spacing={2} alignItems="center">
       {/* Cart Title and Icon */}
       <Grid item container alignItems="center">
-          <MyTypography title="Cart" />
-          <ShoppingCartIcon style={{ marginLeft: 90 , color: '#afeeee'}} />
+          <MyTypography title="Cart - " />
+          <ShoppingCartIcon style={{ margin: 10, color: '#aaa', fontSize: 50 }} />
       </Grid>
 
       {/* Cart Products */}

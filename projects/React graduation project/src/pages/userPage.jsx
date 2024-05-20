@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar';
 import ListProducts from '../components/users/listProducts';
 import MyAccount from '../components/users/myAccount';
 import MyOrders from '../components/users/myOrders';
-import LogOut from '../components/users/LogOut';
+import LogOut from '../components/LogOut';
 import '../UI/Style.css'; 
 import MyTypography from '../components/Typography';
 
@@ -32,7 +32,7 @@ export const User = () => {
     <div>
       {/* <MyTypography title={"Hello "+username}/> */}
       <Navbar
-        data={["Products", "My Orders", "My Account", "Log Out"]}
+        data={["Products", "My Orders", "My Account"]}
         onSelect={setSelectedComponent}
         defaultSelected={selectedComponent}
       />

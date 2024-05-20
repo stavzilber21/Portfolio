@@ -5,6 +5,7 @@ import Products from '../components/admin/products';
 import Customers from '../components/admin/customers';
 import Statistics from '../components/admin/statistics';
 import MyTypography from '../components/Typography';
+import LogOut from '../components/LogOut';
 import '../UI/Style.css'; 
 
 
@@ -24,6 +25,8 @@ export const Admin = () => {
         return <Customers />;
       case "Statistics":
         return <Statistics />;
+      case "Log Out":
+        return <LogOut/>
       default:
         return null;
     }

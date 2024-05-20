@@ -8,7 +8,7 @@ const CustomTable = ({ titles, data, renderCell }) => {
         <TableHead>
           <TableRow >
             {titles.map((title, index) => (
-              <TableCell style={{ color: '#90ee90', fontWeight: 'bold', fontSize: '16px' }} key={index}>{title}</TableCell>
+              <TableCell id="titles" key={index}>{title}</TableCell>
             ))}
           </TableRow>
         </TableHead>

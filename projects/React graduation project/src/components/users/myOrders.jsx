@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Table from '../Table';
 import { useSelector } from 'react-redux';
 import { Container, Typography, Grid } from '@mui/material';
+import MyTypography from '../Typography';
 
 export const MyOrders = () => {
   const orders = useSelector((state) => state.orders.orders);
@@ -25,9 +26,7 @@ export const MyOrders = () => {
     <Container maxWidth="lg">
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant="h4" align="center" style={{ color: '#87cefa', fontFamily: 'cursive', fontWeight: 'bold', margin: '10px' }}>
-            Orders
-            </Typography>
+            <MyTypography title={"Orders"}/>
           </Grid>
           <Grid item xs={12}>
       <Table

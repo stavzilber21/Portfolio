@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Cart from './Cart';
-import { Typography,IconButton ,Container, Grid } from '@mui/material';
+import { Typography, IconButton, Container, Grid } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export const ListProducts = () => {
@@ -17,7 +17,7 @@ export const ListProducts = () => {
   const [category, setCategory] = useState('');
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState(0);
-  const [open,setOpen]=useState(false);
+  const [open, setOpen] = useState(false);
 
   const filterData = products.filter(pro =>
     (category !== '' && category !== 'All' ? pro.category === category : true) &&
@@ -32,24 +32,29 @@ export const ListProducts = () => {
   };
 
   return (
-    
     <Container maxWidth="lg">
-    <Grid container spacing={2} style={{ display: "flex" }}>
-      {/* Cart Section */}
-      <Grid item xs={12} md={open ? 3 : 0}>
-          {open &&
-            <>
+      <Grid container spacing={2}>
+        {/* Cart Section */}
+        <Grid item xs={12} md={open ? 3 : 1} style={{ transition: 'width 0.3s' }}>
+          {open && (
+            <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'auto' }}>
               <Cart />
-            </>
-          }
-          <IconButton onClick={() => setOpen(!open)}>
-            <ArrowBackIcon />
-          </IconButton>
+              <IconButton onClick={() => setOpen(!open)} sx={{ alignSelf: 'flex-start', mt: 2 }}>
+                <ArrowBackIcon />
+              </IconButton>
+            </Box>
+          )}
+          {!open && (
+            <IconButton onClick={() => setOpen(!open)} sx={{ alignSelf: 'flex-start' }}>
+              <ArrowBackIcon />
+            </IconButton>
+          )}
         </Grid>
+
         {/* Products Section */}
-        <Grid item xs={12} md={open ? 9 : 12}>
-          <Box sx={{ p: 2,m: 5, border: '2px solid #ccc', borderRadius: 5 , bgcolor: '#f0ffff'}}>
-            <Typography>Filter By: </Typography>
+        <Grid item xs={12} md={open ? 9 : 11} style={{ transition: 'width 0.3s' }}>
+          <Box className="box-products">
+            <Typography>Filter By:</Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <Select
                 value={category}
@@ -87,16 +92,19 @@ export const ListProducts = () => {
               <Button variant='contained' onClick={clearFilter}>Clear</Button>
             </Box>
           </Box>
-          <Box sx={{ p: 2,m: 5, border: '2px solid #ccc', borderRadius: 5, bgcolor: '#f0ffff'}}>
-            {filterData.map(pro => (
-              <PurProducts key={pro.id} product={pro} />
-            ))}
+
+          <Box className="box-products">
+            <Grid container spacing={2}>
+              {filterData.map(pro => (
+                <Grid item xs={12} lg={6} key={pro.id}>
+                  <PurProducts product={pro} />
+                </Grid>
+              ))}
+            </Grid>
           </Box>
-        
-          </Grid>
+        </Grid>
       </Grid>
     </Container>
-    
   );
 };
 

@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import Table from '../Table';
 import { useSelector } from 'react-redux';
 import { Container, Typography, Grid } from '@mui/material';
+import MyTypography from '../Typography';
 
-export const Customers = () => {
+ const Customers = () => {
   const users = useSelector((state) => state.users.users);
   const orders = useSelector((state) => state.orders.orders);
   const [usersTable, setUsersTable] = useState([]);
@@ -34,9 +35,7 @@ export const Customers = () => {
     <Container maxWidth="lg">
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant="h4" align="center" style={{ color: '#87cefa', fontFamily: 'cursive', fontWeight: 'bold', margin: '10px' }}>
-            Customers
-            </Typography>
+            <MyTypography title={"Customers"}/>
           </Grid>
           <Grid item xs={12}>
             <Table

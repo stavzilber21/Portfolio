@@ -1,36 +1,23 @@
 import React, { useState } from 'react';
-import { Typography, TextField, Button, Grid,Card, CardContent, Box } from '@mui/material';
+import { Typography, TextField, Button, Card, CardContent } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { add, update, remove } from '../../firebase/firebaseFunctions';
+import { update, remove } from '../../firebase/firebaseFunctions';
 
-function isObjectEmpty(obj) {
-  return Object.keys(obj).length === 0 && obj.constructor === Object;
-}
-const CategoryItem = ({ category, setShowAddCategory }) => {
-  const [editMode, setEditMode] = useState(isObjectEmpty(category)  ? true : false);
-  const [editedName, setEditedName] = useState(isObjectEmpty(category) ? '' : category.name);
-
-  const addCategory = () => {
-    const newCat = { name: editedName };
-    add("categories", newCat);
-    setEditMode(!editMode);
-    setShowAddCategory(false);
-  };
+const CategoryItem = ({ category, isNew, newCategoryName, setNewCategoryName, handleAddCategory, handleCancelAdd }) => {
+  const [editMode, setEditMode] = useState(isNew || false);
+  const [editedName, setEditedName] = useState(category.name || '');
 
   const handleUpdateCategory = () => {
     if (editMode) {
-      // Update category name in Firebase
       update("categories", category.id, { name: editedName });
     }
-    // Toggle edit mode
     setEditMode(!editMode);
   };
 
   const handleRemoveCategory = () => {
-    // Remove category from Firebase
     remove("categories", category.id);
   };
 
@@ -38,70 +25,58 @@ const CategoryItem = ({ category, setShowAddCategory }) => {
     setEditedName(e.target.value);
   };
 
-  const saveEdit = () =>{
-    if(editMode){
-      if(isObjectEmpty(category)){
-        addCategory()
-      } else {
-        handleUpdateCategory()
-      }
+  const handleSave = () => {
+    if (isNew) {
+      handleAddCategory();
     } else {
-      setEditMode(!editMode)
+      handleUpdateCategory();
     }
-  }
-
-  const handleButtonClick = () => {
-    setEditMode(false);
-    setShowAddCategory(false);
   };
 
   return (
     <Card className="category-card">
-    <CardContent style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-      {editMode ? (
-        <TextField
-          fullWidth
-          value={editedName}
-          onChange={handleChange}
-          autoFocus
-          style={{ marginRight: '8px' }} 
-        />
-      ) : (
-        <Typography style={{ color: '#87cefa', fontFamily: 'cursive', fontWeight: 'bold', marginRight: '8px' }} variant="h6">{category.name}</Typography>
-      )}
+      <CardContent style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        {editMode ? (
+          <TextField
+            fullWidth
+            value={isNew ? newCategoryName : editedName}
+            onChange={isNew ? (e) => setNewCategoryName(e.target.value) : handleChange}
+            autoFocus
+            style={{ marginRight: '8px' }} 
+          />
+        ) : (
+          <Typography variant="h6" className="category-title">{category.name} </Typography>
+        )}
 
-      <div style={{ display: 'flex', gap: '8px' }}> 
-        <Button
-          variant="outlined"
-          onClick={saveEdit}
-          startIcon={editMode ? <SaveIcon /> : <EditIcon />}
-        >
-          {editMode ? 'Save' : 'Edit'}
-        </Button>
-        {
-          !isObjectEmpty(category) &&  <Button
-              variant="outlined"
-              color="secondary"
-              onClick={handleRemoveCategory}
-              startIcon={<DeleteIcon />}
-              >
-              Delete
-          </Button>
-        }
-       
-        {editMode && (
+        <div style={{ display: 'flex', gap: '8px' }}>
           <Button
             variant="outlined"
-            color="secondary"
-            onClick={handleButtonClick}
-            startIcon={<CancelIcon />}
+            onClick={handleSave}
+            startIcon={editMode ? <SaveIcon /> : <EditIcon />}
           >
-            Cancel
+            {editMode ? 'Save' : 'Edit'}
           </Button>
-        )}
-      </div>
-    </CardContent>
-  </Card>
+          {!isNew && (
+            <Button
+              variant="outlined"
+              onClick={handleRemoveCategory}
+              startIcon={<DeleteIcon />}
+            >
+              Delete
+            </Button>
+          )}
+          {editMode && (
+            <Button
+              variant="outlined"
+              onClick={isNew ? handleCancelAdd : () => setEditMode(false)}
+              startIcon={<CancelIcon />}
+            >
+              Cancel
+            </Button>
+          )}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

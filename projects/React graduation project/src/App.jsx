@@ -18,7 +18,7 @@ import Statistics from './components/admin/statistics';
 import ListProducts from './components/users/listProducts';
 import MyOrders from './components/users/myOrders';
 import MyAccount from './components/users/myAccount';
-import LogOut from './components/users/LogOut';
+import LogOut from './components/LogOut';
 
 
 
@@ -67,6 +67,7 @@ function App() {
           <Route  path='products' element={<Products />} />
           <Route  path='customers' element={<Customers />} />
           <Route  path='statistics' element={<Statistics />} />
+          <Route  path='log out' element={<LogOut />} />
         </Route>
 
         {/* Dynamic Routing - User */}
