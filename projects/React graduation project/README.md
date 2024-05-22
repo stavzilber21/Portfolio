@@ -71,6 +71,3 @@ Contributions to this project are welcome. Feel free to submit bug reports, feat
 - Stav Zilber
   - Email: stavzilber@gmail.com
 
-### Acknowledgments:
-
-- Thanks to Yaniv Arad's course.
