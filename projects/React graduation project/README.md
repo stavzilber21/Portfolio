@@ -8,6 +8,10 @@ This project is an e-Commerce web application built using React and Redux for st
 
 
 
+https://github.com/stavzilber21/YanivAradCourse/assets/93096648/28e6facf-0e24-4849-a484-2be91abdce99
+
+
+
 ## Features
 
 ### General
