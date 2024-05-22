@@ -6,7 +6,7 @@ This project is an e-Commerce web application built using React and Redux for st
 
 ## Demo
 
-![video1593431744-ezgif com-crop](https://github.com/stavzilber21/YanivAradCourse/assets/93096648/1dec1537-a969-4b4b-ac13-9ab5decd3d93)
+
 
 ## Features
 
