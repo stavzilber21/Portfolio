@@ -4,6 +4,10 @@
 
 This project is an e-Commerce web application built using React and Redux for state management. The application is divided into two operation modes: Administration and Customer Usage. The target audience includes registered customers (users) and the admin of the website.
 
+## Demo
+
+![video1593431744-ezgif com-crop](https://github.com/stavzilber21/YanivAradCourse/assets/93096648/1dec1537-a969-4b4b-ac13-9ab5decd3d93)
+
 ## Features
 
 ### General
