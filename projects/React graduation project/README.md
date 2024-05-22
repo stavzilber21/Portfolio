@@ -2,10 +2,9 @@
 
 ## Overview
 
-This project is an e-Commerce web application built using React and Redux for state management. The application is divided into two operation modes: Administration and Customer Usage. The target audience includes registered customers (users) and the admin of the website.
+This project is an e-Commerce web application built using React and Redux for state management, with Firebase serving as the server backend. The application is divided into two operation modes: Administration and Customer Usage. The target audience includes registered customers (users) and the admin of the website.
 
 ## Demo
-
 
 
 https://github.com/stavzilber21/YanivAradCourse/assets/93096648/28e6facf-0e24-4849-a484-2be91abdce99
