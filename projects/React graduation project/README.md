@@ -1,4 +1,4 @@
-# e-Commerce Web Site Project
+# e-Commerce Website Project
 
 ## Overview
 
