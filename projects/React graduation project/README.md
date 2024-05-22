@@ -54,3 +54,15 @@ Accessible to all logged-in customers. Customers can manage their accounts, view
 - **React Material UI**: For designing the user interface.
 - **CSS**: For additional styling.
 
+### Contributing:
+
+Contributions to this project are welcome. Feel free to submit bug reports, feature requests, or pull requests.
+
+### Authors:
+
+- Stav Zilber
+  - Email: stavzilber@gmail.com
+
+### Acknowledgments:
+
+- Thanks to Yaniv Arad's course.
