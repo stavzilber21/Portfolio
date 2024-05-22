@@ -54,13 +54,3 @@ Accessible to all logged-in customers. Customers can manage their accounts, view
 - **React Material UI**: For designing the user interface.
 - **CSS**: For additional styling.
 
-## Getting Started
-
-### Prerequisites
-- Node.js
-- npm (Node Package Manager)
-
-### Installation
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/e-commerce-website.git
