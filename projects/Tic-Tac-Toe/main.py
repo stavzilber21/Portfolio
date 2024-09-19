@@ -34,7 +34,7 @@ def check_win():
             winner = True
 
 
-    # בדוק אם יש תיקו
+   
     if count == 9 and not winner:
         messagebox.showinfo("Tic-Tac-Toe", "It's a tie!")
         window.quit()
