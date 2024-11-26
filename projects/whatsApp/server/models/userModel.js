@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema(
     email: String,
     password: String,
     phone: String,
-    contacts: []  
+    contacts: [String]  
   },
   { versionKey: false }
 );
