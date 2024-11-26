@@ -1,0 +1,20 @@
+[
+  {
+    "content": "Hi, how are you?",
+    "sender": "972501234567",
+    "receiver": ["972502345678"],
+    "timestamp": "2024-11-26T15:00:00Z"
+  },
+  {
+    "content": "Don't forget our meeting tomorrow!",
+    "sender": "972503456789",
+    "receiver": ["972501234567", "972502345678"],
+    "timestamp": "2024-11-26T16:30:00Z"
+  },
+  {
+    "content": "Thanks for the update.",
+    "sender": "972502345678",
+    "receiver": ["972503456789"],
+    "timestamp": "2024-11-26T17:15:00Z"
+  }
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "password": "hashedPassword123", 
+    "phone": "+972501234567",
+    "contacts": []
+  },
+  {
+    "name": "Jane Smith",
+    "email": "jane.smith@example.com",
+    "password": "hashedPassword456",
+    "phone": "+972502345678",
+    "contacts": []
+  },
+  {
+    "name": "David Cohen",
+    "email": "david.cohen@example.com",
+    "password": "hashedPassword789",
+    "phone": "+972503456789",
+    "contacts": []
+  }
+]
