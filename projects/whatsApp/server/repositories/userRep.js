@@ -17,8 +17,8 @@ const getUserByPhone=async(phone)=>{
 }
 
 //For the login
-const getUserByEmailAndPassword=async(email,password)=>{
-  return await User.findOne({"email": email,"password": password});
+const getUserByEmail=async(email)=>{
+  return await User.findOne({"email": email});
 }
 
-  module.exports = {getUserByEmailAndPassword,getAllUsers,getUserByPhone,addUser};
+  module.exports = {getUserByEmail,getAllUsers,getUserByPhone,addUser};

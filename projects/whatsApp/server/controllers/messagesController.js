@@ -9,7 +9,6 @@ const router = express.Router();
 router.get('/', async (req, res) => {
   try {
     const messages = await messagesService.getAllMessages();
-    console.log(messages);
     
     res.send(messages);
   } catch (error) {
