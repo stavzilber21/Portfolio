@@ -1,13 +1,11 @@
-import { useState, useEffect, useCallback } from 'react'; 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { Routes, Route} from 'react-router-dom';
-import { useDispatch } from "react-redux";
-import axios from 'axios';
+
 import Login from './pages/Login';
 import Register from './pages/Register';
-import { usersActions } from './redux/usersSlice';
-import { messagesActions } from './redux/messagesSlice';
 
-import './App.css'
+
+import Home from './pages/home';
 
 // const USERS_URL = 'http://localhost:3000/user';
 // const MESSAGES_URL = 'http://localhost:3000/messages';
@@ -37,6 +35,7 @@ function App() {
      <Routes>
      <Route path='/' element={<Login />} />
      <Route path='/register' element={<Register />} />
+     <Route path ='/home' element={<Home/>}></Route>
      </Routes>
     </>
   )

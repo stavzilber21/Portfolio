@@ -1,9 +1,12 @@
 import React from 'react'
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from "react-redux";
+import { userActions } from '../redux/userSlice';
 
 export const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
@@ -29,9 +32,11 @@ const onSubmit = async (data) => {
     //Saving the token in the localStorage
     localStorage.setItem('token', result.token);
     console.log(result.message);
+    
+    //Saving user information in Redux
+    dispatch(userActions.load(result.user));
 
-    // הפניה לדף אחר במידת הצורך
-    // navigate('/home')
+    navigate('/home')
   } catch (error) {
     console.error(error.message);
     alert("Login failed: " + result.message);

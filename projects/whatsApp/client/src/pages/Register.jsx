@@ -33,7 +33,7 @@ export const Register = () => {
         alert(result.message || "Registration failed.");
       } else {
         alert("Registration successful!");
-        // navigate('/home');
+        navigate('/home');
       }
     } catch (error) {
       console.error(error.message);
