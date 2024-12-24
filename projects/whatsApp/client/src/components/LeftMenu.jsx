@@ -1,26 +1,56 @@
-import React from 'react'
-import RoundedBtn from "./common/RoundedBtn";
+import React, { useState } from "react";
+import RoundedBtn from "./common/button";
 import { MdPeopleAlt } from "react-icons/md";
 import { TbCircleDashed } from "react-icons/tb";
 import { BsFillChatLeftTextFill } from "react-icons/bs";
 import { HiDotsVertical } from "react-icons/hi";
 import { BiFilter } from "react-icons/bi";
 import { pp } from "../assets/whatsapp";
+import Chats from "./Chats";
+
 
 export const LeftMenu = () => {
+    const [filter, setFilter] = useState(false);
+
   return (
-    <div className='flex flex-col border-r border-neutral-700 w-100 h-screen' >
-        <div className='justify-between items-center bg-[#202d33] h-[60px] p-3'>
-        <img src={pp} alt="profile_picture" className="rounded-full w-[40px]" />
-            {/* Profile nav buttons */}
-            <div className="flex justify-between w-[175px]">
-            <RoundedBtn icon={<MdPeopleAlt />} />
-            <RoundedBtn icon={<TbCircleDashed />} />
-            <RoundedBtn icon={<BsFillChatLeftTextFill />} />
-            <RoundedBtn icon={<HiDotsVertical />} />
-            </div>
+    // LeftMenu container
+    <div>
+      {/* Profile nav */}
+      <div style={{display: "flex"}}>
+        {/* Profile picture */}
+        <img src={pp} alt="profile_picture" style={{width: 40}}/>
+
+        {/* Profile nav buttons */}
+        <div >
+          <RoundedBtn icon={<MdPeopleAlt />} />
+          <RoundedBtn icon={<TbCircleDashed />} />
+          <RoundedBtn icon={<BsFillChatLeftTextFill />} />
+          <RoundedBtn icon={<HiDotsVertical />} />
         </div>
+      </div>
+
+      {/* Search and filter */}
+      <div>
+        {/* Search input */}
+        <input
+          type="text"
+          placeholder="Search or start a new chat"
+        />
+
+        {/* Filter button */}
+        <button
+          onClick={() => setFilter(!filter)}
+        >
+          <BiFilter />
+        </button>
+      </div>
+
+      {/* Chats */}
+      <Chats filter={filter} />
     </div>
   )
 }
-export default LeftMenu
+
+
+
+export default LeftMenu;
