@@ -15,4 +15,15 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get("/:id", async (req,res) => {
+  try {
+     const { id } = req.params;
+      const result = await userService.getUserById(id);
+      return res.json(result);
+    } catch (error) {
+      return res.send(error);
+    }
+})
+
+
 module.exports = router;

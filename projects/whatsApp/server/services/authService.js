@@ -12,7 +12,8 @@ const login = async (email, password) => {
     if (!passwordMatch) return { success: false, message: "Invalid email or password" };
 
     const token = jwt.sign({ id: user.id }, "secret", { expiresIn: "1h" });
-    return { success: true, message: "Login successful", token };
+    
+    return { success: true, message: "Login successful", token, user };
 };
 
 const register = async (name, email, password, phone) => {

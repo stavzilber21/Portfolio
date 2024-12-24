@@ -5,4 +5,8 @@ const getAllUsers = async() => {
     return users;
 }
 
-module.exports = {getAllUsers };
+const getUserById = async (id)=>{
+    return await userRep.getUserById(id);
+  }
+
+module.exports = {getAllUsers,getUserById };
