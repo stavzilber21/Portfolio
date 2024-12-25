@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 
 export const Chats = () => {
   const [chats, setChats] = useState([]);
+  const [phoneToNameMap, setPhoneToNameMap] = useState({});
 
   const user = useSelector((state) => state.user.user);
 
@@ -18,10 +19,7 @@ export const Chats = () => {
       
       const result = await resp.json();
       
-      console.log(result);
-      console.log(user.phone);
       const filterChats = result.filter(ch => ch.participants.includes(user.phone))
-      console.log(filterChats);
         setChats(filterChats);
       } catch (error) {
         console.error("Failed to fetch chats:", error);
@@ -33,16 +31,44 @@ export const Chats = () => {
     }
   }, [user]);
 
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const resp = await fetch("http://localhost:3000/user", {
+          method: "GET",
+          headers: { "x-access-token": token },
+        });
+        const users = await resp.json();
+        const map = {};
+        users.forEach((user) => {
+          map[user.phone] = user.name;
+        });
+        setPhoneToNameMap(map);
+      } catch (error) {
+        console.error("Failed to fetch users:", error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
   return (
     <div>
-      {chats.length > 0 ? (
-        chats.map((chat, i) => (
-          <Chat key={i} chat={chat} userPhone={user.phone} />
-        ))
-      ) : (
-        <p>No chats found.</p>
-      )}
-    </div>
+    {chats.length > 0 ? (
+      chats.map((chat) => (
+        <Chat
+          key={chat.chatId}
+          chat={chat}
+          userPhone={user.phone}
+          phoneToNameMap={phoneToNameMap}
+          // onSelectChat={setSelectedChatId} 
+        />
+      ))
+    ) : (
+      <p>No chats found.</p>
+    )}
+  </div>
   );
 };
 

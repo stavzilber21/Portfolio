@@ -1,43 +1,42 @@
-import React from 'react'
+import React from "react";
 
-export const Chat = ({ pp, contact, msg, time, unreadMsgs, active }) => {
-    return (
-        // Chat container
-        <div
-        >
-          {/* Profile picture */}
-          <img
-            src={pp}
-            alt="profile_picture"
-          />
-    
-          {/* Info container */}
-          <div>
-            {/* Contact name and message */}
-            <div>
-              {/* Contact name */}
-              <h1>{contact}</h1>
-    
-              {/* Message */}
-              <p >
-                {msg}
-              </p>
-            </div>
-    
-            {/* Time and number of messages*/}
-            <div>
-              {/* Time */}
-              <p>{time}</p>
-    
-              {/* Number of messages */}
-              {unreadMsgs && (
-                <div>
-                  <p >{unreadMsgs}</p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      );
+function Chat({ chat, userPhone , phoneToNameMap }) {
+  const { messages, unreadMessages } = chat;
+
+  
+  const contactName =
+    chat.type === "group"
+      ? chat.name
+      : chat.participants
+          .filter((p) => p !== userPhone)
+          .map((phone) => phoneToNameMap[phone] || phone)
+          .join(", ");
+
+  const lastMessage = messages?.[messages.length - 1];
+
+  return (
+    <div
+      // onClick={() => onSelectChat(chat.chatId)}
+      style={{
+        border: "1px solid black",
+        padding: "10px",
+        margin: "5px",
+        cursor: "pointer",
+      }}
+    >
+      <h3>{contactName}</h3>
+      {lastMessage && (
+        <p>
+          <strong>{lastMessage.sender === userPhone ? "You" : phoneToNameMap[lastMessage.sender] || lastMessage.sender}:</strong>{" "}
+          {lastMessage.content}
+        </p>
+      )}
+      {lastMessage && (
+        <p>Time: {new Date(lastMessage.timestamp).toLocaleTimeString()}</p>
+      )}
+      {unreadMessages[userPhone] > 0 && <p>Unread messages: {unreadMessages[userPhone]}</p>}
+    </div>
+  );
 }
-export default Chat
+
+export default Chat;

@@ -6,7 +6,7 @@ export const Home = () => {
   return (
     <div >
           {/* 2 components cointainer */}
-      <div>
+      <div style={{"display": "flex"}}>
         <div>
           <LeftMenu />
         </div>
