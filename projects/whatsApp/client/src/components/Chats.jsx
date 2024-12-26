@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from "react";
 import Chat from "./Chat";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { selectChat } from "../redux/chatSlice";
 
 export const Chats = () => {
   const [chats, setChats] = useState([]);
   const [phoneToNameMap, setPhoneToNameMap] = useState({});
 
   const user = useSelector((state) => state.user.user);
+
+  const dispatch = useDispatch();
+
+  const handleChatClick = (chat) => {
+    dispatch(selectChat(chat)); 
+  };
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -62,7 +70,7 @@ export const Chats = () => {
           chat={chat}
           userPhone={user.phone}
           phoneToNameMap={phoneToNameMap}
-          // onSelectChat={setSelectedChatId} 
+          onSelectChat={handleChatClick}
         />
       ))
     ) : (

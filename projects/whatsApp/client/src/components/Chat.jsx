@@ -1,7 +1,11 @@
 import React from "react";
 
-function Chat({ chat, userPhone , phoneToNameMap }) {
+function Chat({ chat, userPhone , phoneToNameMap, onSelectChat }) {
   const { messages, unreadMessages } = chat;
+
+  const handleClick = () => {
+    onSelectChat(chat);
+  };
 
   
   const contactName =
@@ -16,7 +20,7 @@ function Chat({ chat, userPhone , phoneToNameMap }) {
 
   return (
     <div
-      // onClick={() => onSelectChat(chat.chatId)}
+    onClick={handleClick}
       style={{
         border: "1px solid black",
         padding: "10px",

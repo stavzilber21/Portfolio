@@ -7,11 +7,21 @@ import { userActions } from '../redux/userSlice';
 export const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-} = useForm();
+//   const {
+//     register,
+//     handleSubmit,
+//     formState: { errors },
+// } = useForm();
+const {
+  register,
+  handleSubmit,
+  formState: { errors },
+} = useForm({
+  defaultValues: {
+    email: "stavzilber@gmail.com",
+    password: "stav2000",
+  },
+});
 
 const onSubmit = async (data) => {
   try {
