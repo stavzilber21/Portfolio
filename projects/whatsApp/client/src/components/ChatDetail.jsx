@@ -34,6 +34,12 @@ export const ChatDetail = () => {
     fetchChatDetails();
   }, [selectedChat]);
 
+   // Handle case where no chat is selected
+   if (!selectedChat) {
+    return <p>Please select a chat to view details.</p>;
+  }
+
+
   // Get the chat title
   const chatTitle =
     selectedChat.type === "group"
@@ -42,11 +48,7 @@ export const ChatDetail = () => {
           selectedChat.participants.find((phone) => phone !== currentUserPhone)
         ] || "Chat Details"; // Name of the other participant in personal chat
 
-  // Handle case where no chat is selected
-  if (!selectedChat) {
-    return <p>Please select a chat to view details.</p>;
-  }
-
+ 
   return (
     <div>
       <h2>{chatTitle}</h2>
