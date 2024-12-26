@@ -15,4 +15,26 @@ router.get('/', async (req, res) => {
   }
 });
 
+//Get chat by id
+router.get("/:id", async (req,res) => {
+  try {
+     const { id } = req.params;
+      const result = await chatService.getChatById(id);
+      return res.json(result);
+    } catch (error) {
+      return res.send(error);
+    }
+})
+
+//Get the participants by chatId
+router.get("/chat/:id", async (req,res) => {
+  try {
+     const { id } = req.params;
+      const result = await chatService.getChatAndParticipants(id);
+      return res.json(result);
+    } catch (error) {
+      return res.send(error);
+    }
+})
+
 module.exports = router;
