@@ -1,6 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useRef} from "react";
 import { useSelector } from "react-redux";
 import Message from "./Message";
+import { HiDotsVertical } from "react-icons/hi";
+import { BiHappy } from "react-icons/bi";
+import { AiOutlinePaperClip } from "react-icons/ai";
+import { BsFillMicFill } from "react-icons/bs"
+import RoundedBtn from "./Common/button";
+import { MdSearch, MdSend } from "react-icons/md";
 
 export const ChatDetail = () => {
   const selectedChat = useSelector((state) => state.chat.selectedChat);
@@ -8,6 +14,34 @@ export const ChatDetail = () => {
 
   // State for user details
   const [userDetails, setUserDetails] = useState({});
+  const [typing, setTyping] = useState(false);
+
+  const inputRef = useRef(null);
+
+  const addMessage = (msg) => {
+    const newMessages = [...messages, msg];
+    setMessages(newMessages);
+  };
+
+  const handleEmojiClick = () => {
+    inputRef.current.value += "🔥";
+    inputRef.current.focus();
+  };
+
+  const handleInputChange = () => {
+    inputRef.current.value.length === 0 ? setTyping(false) : setTyping(true);
+  };
+
+  const handleInputSubmit = () => {
+    if (inputRef.current.value.length > 0) {
+      addMessage({
+       
+      });
+      inputRef.current.value = "";
+      inputRef.current.focus();
+      setTyping(false);
+    }
+  };
 
   // Fetch user details when selectedChat changes
   useEffect(() => {
@@ -51,7 +85,14 @@ export const ChatDetail = () => {
  
   return (
     <div>
-      <h2>{chatTitle}</h2>
+      <div style={{display: "flex"}}>
+        <h2>{chatTitle}</h2>
+        {/* Buttons */}
+        <div>
+          <RoundedBtn icon={<MdSearch />} />
+          <RoundedBtn icon={<HiDotsVertical />} />
+        </div>
+      </div>
       <div>
         {selectedChat.messages.map((message, index) => (
           <Message
@@ -62,6 +103,33 @@ export const ChatDetail = () => {
             userDetails={userDetails} // Pass the phone-to-name mapping
           />
         ))}
+      </div>
+         {/* Bottom section */}
+      <div>
+        {/* Emoji btn */}
+        <RoundedBtn icon={<BiHappy />} onClick={handleEmojiClick} />
+
+        {/* Upload btn */}
+        <span>
+          <RoundedBtn icon={<AiOutlinePaperClip />} />
+        </span>
+
+        {/* Input bar */}
+        <input
+          type="text"
+          placeholder="Type a message"
+          onChange={handleInputChange}
+          ref={inputRef}
+        />
+
+        {/* Mic/Send btn */}
+        <span >
+          {typing ? (
+            <RoundedBtn icon={<MdSend />} onClick={handleInputSubmit} />
+          ) : (
+            <RoundedBtn icon={<BsFillMicFill />} />
+          )}
+        </span>
       </div>
     </div>
   );
