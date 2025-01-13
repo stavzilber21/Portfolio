@@ -1,5 +1,5 @@
 import React, { useState, useEffect , useRef} from "react";
-import { useSelector } from "react-redux";
+import { useSelector , useDispatch} from "react-redux";
 import Message from "./Message";
 import { HiDotsVertical } from "react-icons/hi";
 import { BiHappy } from "react-icons/bi";
@@ -7,10 +7,12 @@ import { AiOutlinePaperClip } from "react-icons/ai";
 import { BsFillMicFill } from "react-icons/bs"
 import RoundedBtn from "./Common/button";
 import { MdSearch, MdSend } from "react-icons/md";
+import socketService from "../socketService";
 
 export const ChatDetail = () => {
   const selectedChat = useSelector((state) => state.chat.selectedChat);
   const currentUserPhone = useSelector((state) => state.user.user.phone);
+  const dispatch = useDispatch();
 
   // State for user details
   const [userDetails, setUserDetails] = useState({});
@@ -18,9 +20,40 @@ export const ChatDetail = () => {
 
   const inputRef = useRef(null);
 
-  const addMessage = (msg) => {
-    const newMessages = [...messages, msg];
-    setMessages(newMessages);
+  useEffect(() => {
+    if (!socketService.socket) {
+      socketService.connect();
+    }
+
+    socketService.on('receiveMessage', (newMessage) => {
+      dispatch(addMessageToChat(newMessage)); 
+    });
+
+    return () => {
+      socketService.disconnect();
+      socketService.off('receiveMessage');
+    };
+  }, [dispatch]);
+
+  const addMessage = async (msg) => {
+    socketService.emit("sendMessage", msg);
+  };
+
+  const handleInputSubmit = () => {
+    if (inputRef.current.value.length > 0) {
+      const numMsg = selectedChat.messages.length + 1
+      const newMessage = {
+        chatId: selectedChat.chatId,
+        messageId: "msg" + numMsg,
+        content: inputRef.current.value,
+        sender: currentUserPhone,
+      };
+      
+      addMessage(newMessage);
+      inputRef.current.value = "";
+      inputRef.current.focus();
+      setTyping(false);
+    }
   };
 
   const handleEmojiClick = () => {
@@ -30,17 +63,6 @@ export const ChatDetail = () => {
 
   const handleInputChange = () => {
     inputRef.current.value.length === 0 ? setTyping(false) : setTyping(true);
-  };
-
-  const handleInputSubmit = () => {
-    if (inputRef.current.value.length > 0) {
-      addMessage({
-       
-      });
-      inputRef.current.value = "";
-      inputRef.current.focus();
-      setTyping(false);
-    }
   };
 
   // Fetch user details when selectedChat changes

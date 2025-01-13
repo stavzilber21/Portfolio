@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import RoundedBtn from "./common/button";
+import RoundedBtn from "./Common/button";
 import { MdPeopleAlt } from "react-icons/md";
 import { TbCircleDashed } from "react-icons/tb";
 import { BsFillChatLeftTextFill } from "react-icons/bs";
