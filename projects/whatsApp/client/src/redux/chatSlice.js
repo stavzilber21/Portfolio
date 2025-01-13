@@ -11,7 +11,7 @@ const initialState = {
         selectChat: (state, action) => {
           state.selectedChat = action.payload;
         },
-        addMessage: (state, action) => {
+        addMessageToRedux: (state, action) => {
           // Add a new message
           if (state.selectedChat ) {
             state.selectedChat.messages.push(action.payload);
@@ -20,5 +20,5 @@ const initialState = {
       },
   });
 
-export const { selectChat , addMessage} = chatSlice.actions;
+export const { selectChat , addMessageToRedux} = chatSlice.actions;
 export default chatSlice.reducer;

@@ -8,6 +8,7 @@ import { BsFillMicFill } from "react-icons/bs"
 import RoundedBtn from "./Common/button";
 import { MdSearch, MdSend } from "react-icons/md";
 import socketService from "../socketService";
+import { addMessageToRedux } from "../redux/chatSlice";
 
 export const ChatDetail = () => {
   const selectedChat = useSelector((state) => state.chat.selectedChat);
@@ -26,7 +27,7 @@ export const ChatDetail = () => {
     }
 
     socketService.on('receiveMessage', (newMessage) => {
-      dispatch(addMessageToChat(newMessage)); 
+      dispatch(addMessageToRedux(newMessage)); 
     });
 
     return () => {
