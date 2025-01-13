@@ -23,6 +23,6 @@ app.use('/user', userController);
 app.use('/chats', chatsController);
 app.use('/', authController);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`app is listening at http://localhost:${PORT}`);
 })

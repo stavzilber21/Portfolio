@@ -10,21 +10,18 @@ const getChatById =async (id)=>{
   return await Chat.findOne({"chatId": id});
 }
 
-const addNewMessageToChat = async (msg)=>{
-  console.log("stav");
+const addNewMessageToChat = async (msg,id )=>{
   const chat = await Chat.findOneAndUpdate(
-    { chatId: msg.chatId }, 
+    { chatId: id }, 
     {
-      $push: { messages: newMessage }, //Add a new message
-      $inc: { [`unreadMessages.${msg.recipient}`]: 1 },
+      $push: { messages: msg }, //Add a new message
+      // $inc: !{ [`unreadMessages.${msg.sender}`]: 1 },
     },
     { new: true }
   );
-  console.log("addMsg");
-  
 
   if (chat) {
-    console.log("Message saved and unread count updated:", newMessage);
+    console.log("Message saved and unread count updated:", msg);
     return chat
   } else {
     console.error("Chat not found for chatId:", msg.chatId);

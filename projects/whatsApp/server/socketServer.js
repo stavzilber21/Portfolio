@@ -1,10 +1,12 @@
 const { Server } = require("socket.io");
 const chatRep = require('./repositories/chatRep');
+const dayjs = require('dayjs');
+
 
 function initializeSocket(server) {
   const io = new Server(server, {
     cors: {
-      origin: "http://localhost:3000", 
+      origin: "*", 
       methods: ["GET", "POST"],
     },
   });
@@ -13,20 +15,18 @@ function initializeSocket(server) {
     console.log(`New client connected: ${socket.id}`);
 
     socket.on("sendMessage", async (msg) => {
-        console.log("1");
         try {
           // create the new message
           const newMessage = {
             messageId: msg.messageId,
             content: msg.content,
             sender: msg.sender,
-            timestamp: new Date().toISOString(),
+            timestamp: dayjs().toISOString(),
             readBy: [msg.sender], 
           };
-          console.log("2");
           //Update in the DB
-          const updatedChat = await chatRep.addNewMessageToChat(newMessage);
-
+          const updatedChat = await chatRep.addNewMessageToChat(newMessage,msg.chatId);
+          
           // Sending the message to all customers
           if (updatedChat) {
              io.emit('receiveMessage', newMessage);
