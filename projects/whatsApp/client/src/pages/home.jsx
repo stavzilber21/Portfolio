@@ -1,18 +1,16 @@
 import React from 'react'
 import LeftMenu from '../components/LeftMenu'
 import ChatDetail from '../components/ChatDetail'
+import '../UI/home.css'
 
 export const Home = () => {
   return (
-    <div >
-          {/* 2 components cointainer */}
-      <div style={{"display": "flex"}}>
-        <div>
-          <LeftMenu />
-        </div>
-        <div>
-          <ChatDetail />
-        </div>
+    <div className='container'>
+      <div className='sidebar'>
+        <LeftMenu />
+      </div>
+      <div className='chat-window'>
+        <ChatDetail />
       </div>
     </div>
   )
