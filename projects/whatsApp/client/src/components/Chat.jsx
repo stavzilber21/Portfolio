@@ -25,29 +25,29 @@ function Chat({ chat, userPhone , phoneToNameMap, onSelectChat }) {
       onClick={handleClick}
       className={`chat-container ${chat.selected ? "selected" : ""}`}
     >
-      <div className="chat-details">
+      <div className="chat-details-left">
         <h3>{contactName}</h3>
         {lastMessage && (
           <div className="last-message">
-            {/* <strong>
-              {lastMessage.sender === userPhone
-                ? "You"
-                : phoneToNameMap[lastMessage.sender] || lastMessage.sender}
-            </strong> */}
             <p>{lastMessage.content}</p>
           </div>
-        )}
-        {lastMessage && (
-          <p className="time">
-            {new Date(lastMessage.timestamp).toLocaleTimeString()}
-          </p>
-        )}
+        )}  
       </div>
+      <div className="chat-details-right">
+      {lastMessage && (
+          <p className="time">
+          {new Date(lastMessage.timestamp).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })}
+        </p>
+        
+        
+        )}
       {unreadMessages[userPhone] > 0 && (
         <div className="unread-badge">
           {unreadMessages[userPhone]}
         </div>
       )}
+      </div>
+      
     </div>
   );
 }

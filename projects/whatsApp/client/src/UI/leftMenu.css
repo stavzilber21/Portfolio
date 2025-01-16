@@ -1,57 +1,70 @@
 .left-menu {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-    background-color: #f0f0f0;
-    border-right: 1px solid #ccc;
-    padding: 10px;
-  }
-  
-  .left-menu .profile-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-  
-  .left-menu .profile-nav img {
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-  }
-  
-  .left-menu .profile-nav .nav-buttons{
-    display: flex;
-    gap: 10px;
-  }
-  
-  .left-menu .search-filter {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    margin-bottom: 15px;
-  }
-  
-  .left-menu .search-filter input {
-    flex-grow: 1;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    font-size: 14px;
-    outline: none;
-  }
-  
-  .left-menu .search-filter button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    color: #555;
-  }
-  
-  .left-menu .chats-container {
-    flex-grow: 1;
-    overflow-y: auto;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background-color: #121b22;
+  border-right: 1px solid #ccc;
+}
+
+.profile-nav {
+  background-color: #404447;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+.profile-picture {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.search-filter {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 10px;
+}
+
+.search-filter input {
+  flex-grow: 1;
+  padding: 8px;
+  background-color: #404447;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #fff;
+  outline: none;
+  border: none;
+}
+
+.search-filter input::placeholder {
+  color: #8796a1;
+  font-size: 14px;
+}
+
+.search-filter button {
+  font-size: 20px;
+  padding: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  color: #8796a1;
+}
+
+.search-filter button:hover {
+  background-color: #3c454c;
+}
+
+.chats-container {
+  flex-grow: 1;
+  overflow-y: auto;
+}

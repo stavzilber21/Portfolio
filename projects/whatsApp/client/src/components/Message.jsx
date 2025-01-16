@@ -12,7 +12,7 @@ export const Message = ({content,time,sender,userDetails}) => {
         <strong>{senderName === userName ? "You" :senderName}: </strong> 
         {content}
         {" "}
-        {new Date(time).toLocaleTimeString()}
+        {new Date(time).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })}
         </p>
     </div>
   )
