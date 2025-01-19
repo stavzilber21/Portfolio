@@ -18,7 +18,7 @@ https://github.com/user-attachments/assets/c572ace8-19be-4824-b1b8-c4db0210cb0b
 - **CSS Modules** for styling.
 - **React Icons** for icons.
 - **React Hook Form** for form handling.
-- **Express.js** (for backend).
+- **Node.js + Express.js** (for backend).
 - **Socket.IO** for real-time communication.
 - **MongoDB** for database storage.
 
