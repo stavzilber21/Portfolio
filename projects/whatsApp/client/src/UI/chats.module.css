@@ -1,0 +1,7 @@
+.chats-container {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  cursor: pointer;
+  height: 100%;
+}

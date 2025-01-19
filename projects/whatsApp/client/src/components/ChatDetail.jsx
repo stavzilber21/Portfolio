@@ -1,15 +1,16 @@
-import React, { useState, useEffect , useRef} from "react";
-import { useSelector , useDispatch} from "react-redux";
+import React, { useState, useEffect, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Message from "./Message";
 import { HiDotsVertical } from "react-icons/hi";
 import { BiHappy } from "react-icons/bi";
 import { AiOutlinePaperClip } from "react-icons/ai";
-import { BsFillMicFill } from "react-icons/bs"
+import { BsFillMicFill } from "react-icons/bs";
 import RoundedBtn from "./Common/button";
 import { MdSearch, MdSend } from "react-icons/md";
 import socketService from "../socketService";
 import { addMessageToRedux } from "../redux/chatSlice";
-import "../UI/chatDetail.css";
+import { BsWhatsapp } from "react-icons/bs";
+import styles from "../UI/chatDetail.module.css";
 
 export const ChatDetail = () => {
   const selectedChat = useSelector((state) => state.chat.selectedChat);
@@ -21,6 +22,13 @@ export const ChatDetail = () => {
   const [typing, setTyping] = useState(false);
 
   const inputRef = useRef(null);
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    if (selectedChat && selectedChat.messages) {
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [selectedChat?.messages]);
 
   useEffect(() => {
     if (!socketService.socket) {
@@ -43,7 +51,7 @@ export const ChatDetail = () => {
 
   const handleInputSubmit = () => {
     if (inputRef.current.value.length > 0) {
-      const numMsg = selectedChat.messages.length + 1
+      const numMsg = selectedChat.messages.length + 1;
       const newMessage = {
         chatId: selectedChat.chatId,
         messageId: "msg" + numMsg,
@@ -92,81 +100,81 @@ export const ChatDetail = () => {
     fetchChatDetails();
   }, [selectedChat]);
 
-   // Handle case where no chat is selected
-   if (!selectedChat) {
-    return <p>Please select a chat to view details.</p>;
+  // Handle case where no chat is selected
+  if (!selectedChat) {
+    return (
+      <div className={styles.chatBackground}>
+        <div className={styles.iconContainer}>
+          <BsWhatsapp className={styles.whatsappIcon} />
+        </div>
+      </div>
+    );
   }
-
 
   // Get the chat title
   const chatTitle =
     selectedChat.type === "group"
       ? selectedChat.name // Group chat name
-      : userDetails[
+      : userDetails[ 
           selectedChat.participants.find((phone) => phone !== currentUserPhone)
         ] || "Chat Details"; // Name of the other participant in personal chat
 
- 
-        return (
-          // ChatDetail main container
-          <div className="chat-detail">
-            {/* Contact nav */}
-            <div className="chat-header">
-              {/* Contact info */}
-              <div className="chat-title">
-                <h2>{chatTitle}</h2>
-              </div>
-        
-              {/* Buttons */}
-              <div className="nav-buttons">
-                <RoundedBtn icon={<MdSearch />} />
-                <RoundedBtn icon={<HiDotsVertical />} />
-              </div>
-            </div>
-        
-            {/* Messages section */}
-            <div className="messages-container">
-              {selectedChat.messages.map((message, index) => (
-                <Message
-                  key={index}
-                  content={message.content}
-                  time={message.timestamp}
-                  sender={message.sender}
-                  userDetails={userDetails} // Pass the phone-to-name mapping
-                />
-              ))}
-            </div>
-        
-            {/* Bottom section */}
-            <div className="message-input-section">
-              {/* Emoji btn */}
-              <RoundedBtn icon={<BiHappy />} onClick={handleEmojiClick} />
-        
-              {/* Upload btn */}
-              <span className="rounded-btn">
-                <RoundedBtn icon={<AiOutlinePaperClip />} />
-              </span>
-        
-              {/* Input bar */}
-              <input
-                type="text"
-                placeholder="Type a message"
-                onChange={handleInputChange}
-                ref={inputRef}
-              />
-        
-              {/* Mic/Send btn */}
-              <span className="rounded-btn">
-                {typing ? (
-                  <RoundedBtn icon={<MdSend />} onClick={handleInputSubmit} />
-                ) : (
-                  <RoundedBtn icon={<BsFillMicFill />} />
-                )}
-              </span>
-            </div>
-          </div>
-        );
-        
+  return (
+    <div className={styles.chatDetail}>
+      {/* Contact nav */}
+      <div className={styles.chatHeader}>
+        <div className={styles.chatTitle}>
+          <h2>{chatTitle}</h2>
+        </div>
+
+        <div className={styles.navButtons}>
+          <RoundedBtn icon={<MdSearch />} />
+          <RoundedBtn icon={<HiDotsVertical />} />
+        </div>
+      </div>
+
+      {/* Messages section */}
+      <div className={styles.messagesContainer}>
+        {selectedChat.messages.map((message, index) => (
+          <Message
+            key={index}
+            content={message.content}
+            time={message.timestamp}
+            sender={message.sender}
+            userDetails={userDetails}
+            chatType={selectedChat.type} 
+          />
+        ))}
+        <div ref={bottomRef} />
+      </div>
+
+      {/* Bottom section */}
+      <div className={styles.messageInputSection}>
+        <span className={styles.roundedBtn}>
+          <RoundedBtn icon={<BiHappy />} onClick={handleEmojiClick} />
+        </span>
+        <span className={styles.roundedBtn}>
+          <RoundedBtn icon={<AiOutlinePaperClip />} />
+        </span>
+
+        <input
+          type="text"
+          placeholder="Type a message"
+          onChange={handleInputChange}
+          ref={inputRef}
+          className={styles.messageInput}
+        />
+
+        <span className={styles.roundedBtn}>
+          {typing ? (
+            <RoundedBtn icon={<MdSend />} onClick={handleInputSubmit} />
+          ) : (
+            <RoundedBtn icon={<BsFillMicFill />} />
+          )}
+        </span>
+      </div>
+    </div>
+  );
 };
 
 export default ChatDetail;

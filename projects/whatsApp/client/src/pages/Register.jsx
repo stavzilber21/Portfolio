@@ -1,18 +1,18 @@
 import React from 'react';
 import { useForm } from "react-hook-form";
 import { useNavigate } from 'react-router-dom';
+import styles from '../UI/register.module.css';  
 
 export const Register = () => {
   const navigate = useNavigate();
 
-  //useForm
+  // useForm
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  
   const onSubmit = async (data) => {
     try {
       const response = await fetch('http://localhost:3000/register', {
@@ -42,16 +42,15 @@ export const Register = () => {
   };
 
   return (
-    <div>
-      <p className="title">Registration Form</p>
-      <form className="App" onSubmit={handleSubmit(onSubmit)}>
-        
+    <div className={styles.registerContainer}>
+      <p className={styles.title}>Registration Form</p>
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <input
           type="text"
           {...register("name", { required: "Name is required" })}
           placeholder="Full Name"
         />
-        {errors.name && <span style={{ color: "red" }}>{errors.name.message}</span>}
+        {errors.name && <span className={styles.error}>{errors.name.message}</span>}
 
         <input
           type="email"
@@ -64,7 +63,7 @@ export const Register = () => {
           })}
           placeholder="Email"
         />
-        {errors.email && <span style={{ color: "red" }}>{errors.email.message}</span>}
+        {errors.email && <span className={styles.error}>{errors.email.message}</span>}
 
         <input
           type="password"
@@ -74,7 +73,7 @@ export const Register = () => {
           })}
           placeholder="Password"
         />
-        {errors.password && <span style={{ color: "red" }}>{errors.password.message}</span>}
+        {errors.password && <span className={styles.error}>{errors.password.message}</span>}
 
         <input
           type="text"
@@ -87,9 +86,9 @@ export const Register = () => {
           })}
           placeholder="Phone Number"
         />
-        {errors.phone && <span style={{ color: "red" }}>{errors.phone.message}</span>}
+        {errors.phone && <span className={styles.error}>{errors.phone.message}</span>}
 
-        <button type="submit" style={{ backgroundColor: "#a1eafb" }}>
+        <button type="submit" className={styles.submitBtn}>
           Register
         </button>
       </form>

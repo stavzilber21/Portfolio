@@ -3,7 +3,7 @@ import Chat from "./Chat";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { selectChat } from "../redux/chatSlice";
-import "../UI/chats.css"
+import styles from "../UI/chats.module.css"
 
 export const Chats = () => {
   const [chats, setChats] = useState([]);
@@ -63,7 +63,7 @@ export const Chats = () => {
   }, []);
 
   return (
-    <div className="chats-container">
+    <div className={styles.chatsContainer}>
     {chats.length > 0 ? (
       chats.map((chat) => (
         <Chat
