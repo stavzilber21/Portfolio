@@ -1,0 +1,16 @@
+.roundedBtn {
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+  }
+  
+  .roundedBtn:hover {
+    background-color: rgba(0, 0, 0, 0.1); 
+  }
+  

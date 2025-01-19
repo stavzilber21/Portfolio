@@ -7,29 +7,29 @@ import { HiDotsVertical } from "react-icons/hi";
 import { AiOutlineSearch } from 'react-icons/ai';
 import { pp } from "../assets/whatsapp";
 import Chats from "./Chats";
-import "../UI/leftMenu.css";
+import styles from "../UI/LeftMenu.module.css";
 
 export const LeftMenu = () => {
   const [filter, setFilter] = useState(false);
 
   return (
-    <div className="left-menu">
-      <div className="profile-nav">
-        <img src={pp} alt="profile_picture" className="profile-picture" />
-        <div className="nav-buttons">
+    <div className={styles.leftMenu}>
+      <div className={styles.profileNav}>
+        <img src={pp} alt="profile_picture" className={styles.profilePicture} />
+        <div className={styles.navButtons}>
           <RoundedBtn icon={<MdPeopleAlt />} />
           <RoundedBtn icon={<TbCircleDashed />} />
           <RoundedBtn icon={<BsFillChatLeftTextFill />} />
           <RoundedBtn icon={<HiDotsVertical />} />
         </div>
       </div>
-      <div className="search-filter">
+      <div className={styles.searchFilter}>
         <input type="text" placeholder="Search or start a new chat" />
-        <button onClick={() => setFilter(!filter)}>
-          <AiOutlineSearch />
-        </button>
+           <span className={styles.roundedBtn}>
+              <RoundedBtn icon={<AiOutlineSearch  onClick={() => setFilter(!filter)}/> } />
+          </span>
       </div>
-      <div className="chats-container">
+      <div className={styles.chatsContainer}>
         <Chats filter={filter} />
       </div>
     </div>

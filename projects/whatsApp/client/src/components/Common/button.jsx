@@ -1,10 +1,10 @@
 import React from "react";
-import './roundedBtn.css';
+import styles from './roundedBtn.module.css';
 
 
 function RoundedBtn({ icon, onClick }) {
   return (
-    <button className="rounded-btn" onClick={onClick} >
+    <button className={styles.roundedBtn} onClick={onClick} >
       {icon}
     </button>
   );
