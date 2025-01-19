@@ -4,8 +4,7 @@ A responsive web-based clone of the popular messaging application **WhatsApp**. 
 
 ## Demo
 
-[Watch the demo](https://github.com/stavzilber21/Portfolio/tree/0e248a283c6f303cf78d10bef816eca3baf4cce5/projects/whatsApp)
-
+https://github.com/user-attachments/assets/c572ace8-19be-4824-b1b8-c4db0210cb0b
 
 
  
