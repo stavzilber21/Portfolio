@@ -19,6 +19,7 @@ https://github.com/user-attachments/assets/c572ace8-19be-4824-b1b8-c4db0210cb0b
 - **React Hook Form** for form handling.
 - **Express.js** (for backend).
 - **Socket.IO** for real-time communication.
+- **MongoDB** for database storage.
 
 ## Installation
 
