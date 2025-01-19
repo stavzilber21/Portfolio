@@ -2,6 +2,13 @@
 
 A responsive web-based clone of the popular messaging application **WhatsApp**. This project is built with modern frontend technologies and mimics key UI and functionality aspects of WhatsApp.
 
+## Demo
+
+
+https://github.com/stavzilber21/Portfolio/blob/main/projects/whatsApp/client/src/assets/images/video1743088532.mp4
+
+
+ 
 ## Features
 - Real-time messaging using **WebSockets**.
 - User-friendly chat interface.
