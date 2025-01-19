@@ -8,6 +8,8 @@ API Development and Integration
 
 Database Management (SQL, MongoDB)
 
+Web Socket
+
 Version Control (Git, GitHub)
 
 Problem-Solving and Debugging
