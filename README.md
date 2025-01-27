@@ -10,6 +10,8 @@ Database Management (SQL, MongoDB)
 
 Web Socket
 
+Redux, Redus Saga
+
 Version Control (Git, GitHub)
 
 Problem-Solving and Debugging
