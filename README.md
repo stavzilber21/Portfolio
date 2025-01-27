@@ -10,7 +10,7 @@ Database Management (SQL, MongoDB)
 
 Web Socket
 
-Redux, Redus Saga
+Redux, Redux Saga
 
 Version Control (Git, GitHub)
 
